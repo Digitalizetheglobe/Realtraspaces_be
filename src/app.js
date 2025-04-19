@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const userRoutes = require('./routes/user.routes');
 const blogRoutes = require('./routes/blog.routes');
+const jobRoutes = require('./routes/job.routes');
+const jobApplicationRoutes = require('./routes/jobApplication.routes');
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/applications', jobApplicationRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -1,27 +1,22 @@
 const sequelize = require('./database');
 const User = require('../models/user.model');
 const Blog = require('../models/blog.model');
+const Job = require('../models/job.model');
+const JobApplication = require('../models/jobApplication.model');
 
 const syncDatabase = async () => {
     try {
-        // Test the connection
+        // Test database connection
         await sequelize.authenticate();
-        console.log('Database connection has been established successfully.');
+        console.log('Database connection established successfully.');
 
-        // Create tables if they don't exist
-        await User.sync({ force: true });
-        console.log('User table created successfully');
-
-        await Blog.sync({ force: true });
-        console.log('Blog table created successfully');
-
-        // Verify table creation
-        const [tables] = await sequelize.query("SHOW TABLES");
-        console.log('Current tables in database:', tables);
+        // Drop existing tables and create new ones
+        await sequelize.sync({ force: true });
+        console.log('All tables were synchronized successfully.');
 
         // Create test data
         const user = await User.create({
-            name: 'Test User',
+            username: 'testuser',
             email: 'test@example.com',
             password: 'password123'
         });
@@ -31,20 +26,45 @@ const syncDatabase = async () => {
             blogTitle: 'Test Blog',
             blogDescription: 'This is a test blog',
             blogContent: 'This is the content of the test blog',
-            writer: 'Test User',
-            category: 'Technology',
+            writer: 'Test Writer',
+            category: 'Test Category',
             tags: ['test', 'blog'],
             slug: 'test-blog',
             dynamicFields: {
                 readingTime: 5,
                 isFeatured: true
-            },
-            fieldSchema: {
-                readingTime: { type: 'number', label: 'Reading Time (minutes)' },
-                isFeatured: { type: 'boolean', label: 'Featured Post' }
             }
         });
         console.log('Test blog created successfully');
+
+        const job = await Job.create({
+            jobTitle: 'Software Engineer',
+            jobId: 'SE-001',
+            location: 'Remote',
+            jobType: 'Full-time',
+            experienceLevel: 'Mid-level',
+            salaryRange: '$80,000 - $100,000',
+            postedDate: new Date(),
+            applicationDeadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            jobDescription: 'We are looking for a skilled Software Engineer...',
+            requirements: '5+ years of experience...',
+            benefits: 'Health insurance, 401k...',
+            isActive: true
+        });
+        console.log('Test job created successfully');
+
+        const application = await JobApplication.create({
+            jobId: 'SE-001',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phone: '1234567890',
+            currentCompany: 'Tech Corp',
+            linkedInProfileLink: 'https://linkedin.com/in/johndoe',
+            experienceYears: 5,
+            status: 'under_review'
+        });
+        console.log('Test application created successfully');
 
     } catch (error) {
         console.error('Error during database initialization:', error);

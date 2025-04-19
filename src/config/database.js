@@ -1,23 +1,23 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// First connect without database name to create it if needed
-const sequelizeWithoutDB = new Sequelize('', process.env.DB_USER, process.env.DB_PASSWORD, {
+// Create a connection without specifying the database
+const connection = new Sequelize('', process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     dialect: 'mysql',
-    logging: console.log
+    logging: false
 });
 
-// Create database if it doesn't exist
-sequelizeWithoutDB.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`)
+// Create the database if it doesn't exist
+connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`)
     .then(() => {
-        console.log(`Database ${process.env.DB_NAME} created or already exists`);
+        console.log('Database created or already exists');
     })
     .catch(err => {
         console.error('Error creating database:', err);
     });
 
-// Now create the main sequelize instance with the database
+// Create the main sequelize instance
 const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -25,7 +25,7 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect: 'mysql',
-        logging: console.log,
+        logging: false,
         define: {
             timestamps: true,
             underscored: true
