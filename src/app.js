@@ -3,10 +3,12 @@ const cors = require('cors');
 const morgan = require('morgan');
 require('dotenv').config();
 
+const syncDatabase = require('./config/db.init');
 const userRoutes = require('./routes/user.routes');
 const blogRoutes = require('./routes/blog.routes');
 const jobRoutes = require('./routes/job.routes');
 const jobApplicationRoutes = require('./routes/jobApplication.routes');
+const testimonialRoutes = require('./routes/testimonial.routes');
 
 const app = express();
 
@@ -15,6 +17,9 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Initialize database
+syncDatabase();
 
 // Routes
 app.get('/', (req, res) => {
@@ -26,6 +31,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', jobApplicationRoutes);
+app.use('/api/testimonials', testimonialRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -3,6 +3,7 @@ const User = require('../models/user.model');
 const Blog = require('../models/blog.model');
 const Job = require('../models/job.model');
 const JobApplication = require('../models/jobApplication.model');
+const Testimonial = require('../models/testimonial.model');
 
 const syncDatabase = async () => {
     try {
@@ -65,6 +66,14 @@ const syncDatabase = async () => {
             status: 'under_review'
         });
         console.log('Test application created successfully');
+
+        const testTestimonial = await Testimonial.create({
+            name: 'John Doe',
+            testimonial: 'Great service!',
+            rating: 5,
+            isActive: true
+        });
+        console.log('Test testimonial created:', testTestimonial.toJSON());
 
     } catch (error) {
         console.error('Error during database initialization:', error);
