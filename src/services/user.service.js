@@ -3,13 +3,14 @@ const User = require('../models/user.model');
 class UserService {
     // Create a new user
     async createUser(userData) {
-        try {
-            const user = await User.create(userData);
-            return { success: true, data: user };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
+    try {
+        const user = await User.create(userData);
+        return { success: true, data: user };
+    } catch (error) {
+        return { success: false, error: error.message };
     }
+}
+
 
     // Get all users
     async getAllUsers() {

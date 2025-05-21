@@ -9,7 +9,7 @@ const blogRoutes = require('./routes/blog.routes');
 const jobRoutes = require('./routes/job.routes');
 const jobApplicationRoutes = require('./routes/jobApplication.routes');
 const testimonialRoutes = require('./routes/testimonial.routes');
-
+const authRoutes = require('./routes/auth.routes');
 const app = express();
 
 // Middleware
@@ -27,6 +27,12 @@ app.get('/', (req, res) => {
 });
 
 // API Routes
+app.use('/api/auth', authRoutes);
+
+// Default route
+app.get('/', (req, res) => {
+    res.send('OTP Service is running');
+});
 app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/jobs', jobRoutes);

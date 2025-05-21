@@ -1,8 +1,8 @@
 const validateUser = (req, res, next) => {
-    const { name, email, password } = req.body;
+    const { name, email } = req.body;
 
     // Check if required fields are present
-    if (!name || !email || !password) {
+    if (!name || !email ) {
         return res.status(400).json({
             status: 'error',
             message: 'Name, email, and password are required'
@@ -19,21 +19,21 @@ const validateUser = (req, res, next) => {
     }
 
     // Validate password length
-    if (password.length < 6) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Password must be at least 6 characters long'
-        });
-    }
+    // if (password.length < 6) {
+    //     return res.status(400).json({
+    //         status: 'error',
+    //         message: 'Password must be at least 6 characters long'
+    //     });
+    // }
 
     next();
 };
 
 const validateUpdateUser = (req, res, next) => {
-    const { name, email, password } = req.body;
+    const { name, email } = req.body;
 
     // At least one field should be present for update
-    if (!name && !email && !password) {
+    if (!name && !email) {
         return res.status(400).json({
             status: 'error',
             message: 'At least one field (name, email, or password) is required for update'
@@ -52,12 +52,12 @@ const validateUpdateUser = (req, res, next) => {
     }
 
     // If password is provided, validate its length
-    if (password && password.length < 6) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Password must be at least 6 characters long'
-        });
-    }
+    // if (password && password.length < 6) {
+    //     return res.status(400).json({
+    //         status: 'error',
+    //         message: 'Password must be at least 6 characters long'
+    //     });
+    // }
 
     next();
 };
