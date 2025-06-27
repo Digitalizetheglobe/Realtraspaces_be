@@ -19,9 +19,10 @@ const Blog = sequelize.define('Blog', {
         type: DataTypes.TEXT,
         allowNull: false
     },
-    blogImage: {
-        type: DataTypes.STRING,
-        allowNull: true
+    blogImages: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        defaultValue: []
     },
     writer: {
         type: DataTypes.STRING,
@@ -67,13 +68,15 @@ const Blog = sequelize.define('Blog', {
     freezeTableName: true
 });
 
-// Sync this model
-Blog.sync({ force: true })
+// Sync this model - force: true will drop the table if it exists and create a new one
+// In production, you should set force: false and use migrations instead
+Blog.sync({ force: true, alter: false })
     .then(() => {
         console.log('Blog table created successfully');
     })
     .catch(err => {
         console.error('Error creating Blog table:', err);
+        process.exit(1); // Exit with error to prevent further execution
     });
 
 module.exports = Blog; 

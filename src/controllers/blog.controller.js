@@ -1,17 +1,46 @@
 const blogService = require('../services/blog.service');
+const { uploadBlogImages } = require('../utils/fileUpload');
+
+// Middleware for handling blog image uploads
+exports.uploadBlogImages = uploadBlogImages;
 
 // Create a new blog
 exports.create = async (req, res) => {
-    const result = await blogService.createBlog(req.body);
-    if (result.success) {
-        res.status(201).json({
-            status: 'success',
-            data: result.data
-        });
-    } else {
-        res.status(400).json({
+    try {
+        // Extract blog data from request body
+        const blogData = { ...req.body };
+        
+        // If files were uploaded, add their filenames to blogData
+        if (req.files && req.files.length > 0) {
+            blogData.blogImages = req.files.map(file => file.filename);
+        }
+        
+        const result = await blogService.createBlog(blogData);
+        
+        if (result.success) {
+            res.status(201).json({
+                status: 'success',
+                data: result.data
+            });
+        } else {
+            // Clean up uploaded files if blog creation fails
+            if (blogData.blogImages) {
+                await blogService.cleanupImages(blogData.blogImages);
+            }
+            res.status(400).json({
+                status: 'error',
+                message: result.error
+            });
+        }
+    } catch (error) {
+        // Clean up any uploaded files if an error occurs
+        if (req.files && req.files.length > 0) {
+            const filenames = req.files.map(file => file.filename);
+            await blogService.cleanupImages(filenames);
+        }
+        res.status(500).json({
             status: 'error',
-            message: result.error
+            message: 'Failed to create blog: ' + error.message
         });
     }
 };
@@ -66,16 +95,41 @@ exports.findOne = async (req, res) => {
 
 // Update a blog
 exports.update = async (req, res) => {
-    const result = await blogService.updateBlog(req.params.id, req.body);
-    if (result.success) {
-        res.status(200).json({
-            status: 'success',
-            data: result.data
-        });
-    } else {
-        res.status(result.error === 'Blog not found' ? 404 : 500).json({
+    try {
+        // Extract blog data from request body
+        const blogData = { ...req.body };
+        
+        // If files were uploaded, add their filenames to blogData
+        if (req.files && req.files.length > 0) {
+            blogData.blogImages = req.files.map(file => file.filename);
+        }
+        
+        const result = await blogService.updateBlog(req.params.id, blogData);
+        
+        if (result.success) {
+            res.status(200).json({
+                status: 'success',
+                data: result.data
+            });
+        } else {
+            // Clean up uploaded files if blog update fails
+            if (blogData.blogImages) {
+                await blogService.cleanupImages(blogData.blogImages);
+            }
+            res.status(result.error === 'Blog not found' ? 404 : 500).json({
+                status: 'error',
+                message: result.error
+            });
+        }
+    } catch (error) {
+        // Clean up any uploaded files if an error occurs
+        if (req.files && req.files.length > 0) {
+            const filenames = req.files.map(file => file.filename);
+            await blogService.cleanupImages(filenames);
+        }
+        res.status(500).json({
             status: 'error',
-            message: result.error
+            message: 'Failed to update blog: ' + error.message
         });
     }
 };
