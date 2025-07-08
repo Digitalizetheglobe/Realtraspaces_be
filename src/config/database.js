@@ -4,7 +4,7 @@ require('dotenv').config();
 const sequelize = new Sequelize(
   process.env.DB_NAME || 'realtraspaces_db',
   process.env.DB_USER || 'root',
-  process.env.DB_PASSWORD || '',
+  process.env.DB_PASSWORD || 'Bhavik@020302',
   {
     host: process.env.DB_HOST || 'localhost',
     dialect: 'mysql',
