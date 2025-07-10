@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "Bhavik@020302",
+    "password": "root",
     "database": "realtraspaces_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
