@@ -10,4 +10,7 @@ router.post('/login', webuserController.login);
 // Protected routes
 router.get('/profile', protect, webuserController.getUserProfile);
 
+// Admin routes
+router.get('/', protect, webuserController.getAllWebUsers);
+
 module.exports = router;

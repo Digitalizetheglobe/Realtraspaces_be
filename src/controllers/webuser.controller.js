@@ -154,3 +154,28 @@ exports.getUserProfile = async (req, res) => {
         });
     }
 };
+
+// @desc    Get all web users (Admin only)
+// @route   GET /api/webusers
+// @access  Private/Admin
+exports.getAllWebUsers = async (req, res) => {
+    try {
+        const users = await Webuser.findAll({
+            attributes: { exclude: ['password'] }, // Always exclude password
+            order: [['created_at', 'DESC']]
+        });
+
+        res.json({
+            status: 'success',
+            count: users.length,
+            data: users
+        });
+    } catch (error) {
+        console.error('Get all users error:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error while fetching users',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
