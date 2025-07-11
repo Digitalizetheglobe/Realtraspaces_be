@@ -15,8 +15,8 @@
   },
   "production": {
     "username": "root",
-    "password": "root",
-    "database": "NewStrongPassword@123",
+    "password": "NewStrongPassword@123",
+    "database": "realtraspaces_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
