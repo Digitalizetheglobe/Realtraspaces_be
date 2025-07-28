@@ -11,6 +11,7 @@ const jobApplicationRoutes = require('./routes/jobApplication.routes');
 const testimonialRoutes = require('./routes/testimonial.routes');
 const authRoutes = require('./routes/auth.routes');
 const webuserRoutes = require('./routes/webuser.routes');
+const adminRoutes = require('./routes/adminRoutes');
 const app = express();
 
 // Middleware
@@ -40,6 +41,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', jobApplicationRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/webusers', webuserRoutes);
+app.use('/api/admins', adminRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
