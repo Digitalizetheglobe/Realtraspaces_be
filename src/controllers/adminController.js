@@ -1,37 +1,68 @@
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const db = require('../models');
+const db = require('../models/Admin');
 const Admin = db.Admin;
 
-// Function to sign JWT token
+/**
+ * Sign JWT token
+ * @param {number|string} id - Admin ID
+ * @returns {string} JWT token
+ */
 const signToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+    return jwt.sign({ id }, process.env.JWT_SECRET || 'your_jwt_secret_key', {
         expiresIn: process.env.JWT_EXPIRES_IN || '90d'
     });
 };
 
-// Create and send token
+/**
+ * Create and send token with admin data
+ * @param {Object} admin - Admin instance
+ * @param {number} statusCode - HTTP status code
+ * @param {Object} res - Express response object
+ */
 const createSendToken = (admin, statusCode, res) => {
-    const token = signToken(admin.id);
-    
-    // Create a new object without the password
-    const adminData = admin.get({ plain: true });
-    delete adminData.password;
+    try {
+        const token = signToken(admin.id);
+        
+        // Create a new object without the password
+        const adminData = admin.get({ plain: true });
+        delete adminData.password;
 
-    res.status(statusCode).json({
-        status: 'success',
-        token,
-        data: {
-            admin: adminData
-        }
-    });
+        res.status(statusCode).json({
+            success: true,
+            token,
+            data: {
+                admin: adminData
+            },
+            message: 'Operation successful'
+        });
+    } catch (error) {
+        console.error('Error creating token:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error creating authentication token',
+            error: error.message
+        });
+    }
 };
 
-// Register a new admin
-exports.register = async (req, res, next) => {
+/**
+ * Register a new admin
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.register = async (req, res) => {
     try {
         const { fullName, mobileNumber, password, role } = req.body;
+
+        // Validate required fields
+        if (!fullName || !mobileNumber || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Full name, mobile number, and password are required'
+            });
+        }
 
         // Check if admin already exists
         const existingAdmin = await Admin.findOne({
@@ -40,7 +71,7 @@ exports.register = async (req, res, next) => {
 
         if (existingAdmin) {
             return res.status(400).json({
-                status: 'error',
+                success: false,
                 message: 'Admin with this mobile number already exists'
             });
         }
@@ -50,53 +81,67 @@ exports.register = async (req, res, next) => {
             fullName,
             mobileNumber,
             password,
-            role: role || 'admin'
+            role: role || 'admin',
+            isActive: true
         });
 
+        // Send response with token
         createSendToken(newAdmin, 201, res);
     } catch (error) {
-        res.status(400).json({
-            status: 'error',
-            message: error.message
+        console.error('Error registering admin:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error registering admin',
+            error: error.message
         });
     }
 };
 
-// Login admin
-exports.login = async (req, res, next) => {
+/**
+ * Login admin
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.login = async (req, res) => {
     try {
         const { mobileNumber, password } = req.body;
 
         // 1) Check if mobile number and password exist
         if (!mobileNumber || !password) {
             return res.status(400).json({
-                status: 'error',
+                success: false,
                 message: 'Please provide mobile number and password!'
             });
         }
 
-        // 2) Check if admin exists && password is correct
+        // 2) Check if admin exists and is active
         const admin = await Admin.scope('withPassword').findOne({
-            where: { mobileNumber }
+            where: { 
+                mobileNumber,
+                isActive: true
+            }
         });
 
+        // 3) Check if admin exists and password is correct
         if (!admin || !(await admin.comparePassword(password))) {
             return res.status(401).json({
-                status: 'error',
+                success: false,
                 message: 'Incorrect mobile number or password'
             });
         }
 
-        // 3) Update last login
+        // 4) Update last login
         admin.lastLogin = new Date();
         await admin.save();
 
-        // 4) If everything ok, send token to client
+        // 5) Send token to client
         createSendToken(admin, 200, res);
     } catch (error) {
-        res.status(400).json({
-            status: 'error',
-            message: error.message
+        console.error('Error during login:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error during login',
+            error: error.message
         });
     }
 };
