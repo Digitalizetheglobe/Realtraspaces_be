@@ -1,8 +1,11 @@
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const db = require('../models/Admin.model');
-const Admin = db.Admin;
+const Admin = require('../models/Admin.model');
+
+// Configure JWT secret
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '90d';
 
 /**
  * Sign JWT token
@@ -10,8 +13,8 @@ const Admin = db.Admin;
  * @returns {string} JWT token
  */
 const signToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET || 'your_jwt_secret_key', {
-        expiresIn: process.env.JWT_EXPIRES_IN || '90d'
+    return jwt.sign({ id }, JWT_SECRET, {
+        expiresIn: JWT_EXPIRES_IN
     });
 };
 
@@ -27,6 +30,8 @@ const createSendToken = (admin, statusCode, res) => {
         
         // Create a new object without the password
         const adminData = admin.get({ plain: true });
+        
+        // Remove password from the response
         delete adminData.password;
 
         res.status(statusCode).json({

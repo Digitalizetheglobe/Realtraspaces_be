@@ -22,6 +22,7 @@ async function checkDatabase() {
     console.log('Tables in database:');
     console.log(results);
     
+    
     // Check SequelizeMeta table for migrations
     try {
       const [migrations] = await sequelize.query('SELECT * FROM SequelizeMeta');
