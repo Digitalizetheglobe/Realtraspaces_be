@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const db = require('../models/Admin');
+const db = require('../models/Admin.model');
 const Admin = db.Admin;
 
 /**
