@@ -54,7 +54,25 @@ exports.upsertMetaTags = async (req, res) => {
     });
   }
 };
+exports.getAllMetaTags = async (req, res) => {
+  try {
+    const data = await SeoMetaTag.findAll({
+      attributes: ['id', 'page', 'metaTitle', 'metaDescription', 'metaKeywords', 'canonicalUrl', 'createdAt', 'updatedAt']
+    });
 
+    res.status(200).json({ 
+      status: 'success', 
+      data 
+    });
+  } catch (err) {
+    console.error('Error in getAllMetaTags:', err);
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'Failed to fetch all SEO meta tags',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+};
 exports.getMetaByPage = async (req, res) => {
   const { page } = req.params;
 
