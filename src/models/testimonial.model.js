@@ -31,10 +31,9 @@ const Testimonial = sequelize.define('Testimonial', {
   },
   isActive: {
     type: DataTypes.BOOLEAN,
-    field: 'is_active',
     allowNull: false,
     defaultValue: true
-  }
+  }  
 }, {
   tableName: 'testimonials',
   timestamps: true
