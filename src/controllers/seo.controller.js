@@ -28,11 +28,29 @@ exports.upsertMetaTags = async (req, res) => {
       data: seo
     });
   } catch (err) {
-    console.error('Error in upsertMetaTags:', err);
+    console.error('Error in upsertMetaTags:', {
+      message: err.message,
+      name: err.name,
+      stack: err.stack,
+      originalError: err.original ? {
+        code: err.original.code,
+        errno: err.original.errno,
+        sqlMessage: err.original.sqlMessage,
+        sql: err.original.sql,
+        parameters: err.original.parameters
+      } : null
+    });
+    
     res.status(500).json({ 
       status: 'error', 
       message: 'Failed to update SEO meta tags',
-      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      error: process.env.NODE_ENV === 'development' ? {
+        message: err.message,
+        sqlError: err.original ? {
+          code: err.original.code,
+          sqlMessage: err.original.sqlMessage
+        } : null
+      } : undefined
     });
   }
 };

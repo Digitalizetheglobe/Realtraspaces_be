@@ -13,28 +13,33 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      metaTitle: {
+      meta_title: {
         type: Sequelize.STRING,
         allowNull: true
       },
-      metaDescription: {
+      meta_description: {
         type: Sequelize.TEXT,
         allowNull: true
       },
-      metaKeywords: {
+      meta_keywords: {
         type: Sequelize.TEXT,
         allowNull: true
       },
-      canonicalUrl: {
+      canonical_url: {
         type: Sequelize.STRING,
         allowNull: true
       },
-      createdAt: {
+      is_active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
