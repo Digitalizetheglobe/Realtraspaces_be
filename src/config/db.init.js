@@ -11,9 +11,15 @@ const syncDatabase = async () => {
         await sequelize.authenticate();
         console.log('Database connection established successfully.');
 
-        // Drop existing tables and create new ones
+        // Sync all models with the database
+        // Use { alter: true } to update tables without dropping them
+        // or use { force: true } to drop and recreate tables (WARNING: will delete all data)
+        // await sequelize.sync({ alter: true });
+        console.log('All models were synchronized successfully.');
+        
+        // IMPORTANT: Only uncomment and use force: true when you need to recreate tables
+        // and are okay with losing all data
         // await sequelize.sync({ force: true });
-        console.log('All tables were synchronized successfully.');
 
         // Create test data
         // const user = await User.create({
