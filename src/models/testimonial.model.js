@@ -39,3 +39,5 @@ const Testimonial = sequelize.define('Testimonial', {
   tableName: 'testimonials',
   timestamps: true
 });
+
+module.exports = Testimonial;
