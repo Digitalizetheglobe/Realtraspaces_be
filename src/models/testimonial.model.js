@@ -31,12 +31,11 @@ const Testimonial = sequelize.define('Testimonial', {
   },
   isActive: {
     type: DataTypes.BOOLEAN,
+    field: 'is_active', // ✅ Fix mismatch
     allowNull: false,
     defaultValue: true
-  }  
+  }
 }, {
   tableName: 'testimonials',
   timestamps: true
 });
-
-module.exports = Testimonial; 
