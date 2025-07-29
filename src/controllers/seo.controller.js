@@ -73,6 +73,77 @@ exports.getAllMetaTags = async (req, res) => {
     });
   }
 };
+
+exports.updateMetaTags = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'ID parameter is required' 
+    });
+  }
+
+  try {
+    const data = await SeoMetaTag.update(req.body, {
+      where: { id },
+      returning: true
+    });
+
+    if (!data[1][0]) {
+      return res.status(404).json({ 
+        status: 'not_found', 
+        message: 'No SEO data found for this ID' 
+      });
+    }
+
+    res.status(200).json({ 
+      status: 'success', 
+      data 
+    });
+  } catch (err) {
+    console.error('Error in updateMetaTags:', err);
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'Failed to update SEO meta tags',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+};
+exports.deleteMetaTags = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ 
+      status: 'error', 
+      message: 'ID parameter is required' 
+    });
+  }
+
+  try {
+    const data = await SeoMetaTag.destroy({ where: { id } });
+
+    if (!data) {
+      return res.status(404).json({ 
+        status: 'not_found', 
+        message: 'No SEO data found for this ID' 
+      });
+    }
+
+    res.status(200).json({ 
+      status: 'success', 
+      data 
+    });
+  } catch (err) {
+    console.error('Error in deleteMetaTags:', err);
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'Failed to delete SEO meta tags',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
+};
+
 exports.getMetaByPage = async (req, res) => {
   const { page } = req.params;
 
