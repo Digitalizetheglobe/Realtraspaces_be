@@ -85,30 +85,63 @@ exports.updateMetaTags = async (req, res) => {
   }
 
   try {
+    console.log('Received update request with data:', {
+      identifier,
+      body: req.body
+    });
+
     // Check if identifier is a number (ID) or string (page name)
     const isNumeric = !isNaN(parseInt(identifier));
     const whereClause = isNumeric ? { id: identifier } : { page: identifier };
 
+    console.log('Searching for record with:', whereClause);
+    
     // First find the record to update
     const record = await SeoMetaTag.findOne({ where: whereClause });
     
     if (!record) {
+      console.log('No record found with:', whereClause);
       return res.status(404).json({ 
         status: 'not_found', 
         message: 'No SEO data found for this identifier' 
       });
     }
 
+    console.log('Found record:', record.toJSON());
+    console.log('Updating with data:', req.body);
+
+    // Prepare update data (exclude id and page from the update)
+    const updateData = { ...req.body };
+    delete updateData.id;
+    delete updateData.page;
+    delete updateData.createdAt;
+    delete updateData.updatedAt;
+
+    console.log('Prepared update data:', updateData);
+
     // Update the record
-    const [affectedCount, [updatedRecord]] = await SeoMetaTag.update(req.body, {
+    const [affectedCount, updatedRecords] = await SeoMetaTag.update(updateData, {
       where: whereClause,
-      returning: true
+      returning: true,
+      individualHooks: true
     });
 
-    if (affectedCount === 0 || !updatedRecord) {
+    console.log('Update result:', {
+      affectedCount,
+      updatedRecords: updatedRecords ? updatedRecords.map(r => r.toJSON()) : null
+    });
+
+    if (affectedCount === 0 || !updatedRecords || updatedRecords.length === 0) {
+      console.error('Update failed - no records affected or returned');
       return res.status(500).json({ 
         status: 'error', 
-        message: 'Failed to update SEO meta tags' 
+        message: 'Failed to update SEO meta tags - no records were updated',
+        details: process.env.NODE_ENV === 'development' ? {
+          whereClause,
+          updateData,
+          affectedCount,
+          hasUpdatedRecords: !!(updatedRecords && updatedRecords.length > 0)
+        } : undefined
       });
     }
 
