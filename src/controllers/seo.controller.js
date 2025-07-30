@@ -75,71 +75,138 @@ exports.getAllMetaTags = async (req, res) => {
 };
 
 exports.updateMetaTags = async (req, res) => {
-  const { id } = req.params;
+  const { identifier } = req.params;
 
-  if (!id) {
+  if (!identifier) {
     return res.status(400).json({ 
       status: 'error', 
-      message: 'ID parameter is required' 
+      message: 'Identifier parameter is required' 
     });
   }
 
   try {
-    const data = await SeoMetaTag.update(req.body, {
-      where: { id },
+    // Check if identifier is a number (ID) or string (page name)
+    const isNumeric = !isNaN(parseInt(identifier));
+    const whereClause = isNumeric ? { id: identifier } : { page: identifier };
+
+    // First find the record to update
+    const record = await SeoMetaTag.findOne({ where: whereClause });
+    
+    if (!record) {
+      return res.status(404).json({ 
+        status: 'not_found', 
+        message: 'No SEO data found for this identifier' 
+      });
+    }
+
+    // Update the record
+    const [affectedCount, [updatedRecord]] = await SeoMetaTag.update(req.body, {
+      where: whereClause,
       returning: true
     });
 
-    if (!data[1][0]) {
-      return res.status(404).json({ 
-        status: 'not_found', 
-        message: 'No SEO data found for this ID' 
+    if (affectedCount === 0 || !updatedRecord) {
+      return res.status(500).json({ 
+        status: 'error', 
+        message: 'Failed to update SEO meta tags' 
       });
     }
 
     res.status(200).json({ 
-      status: 'success', 
-      data 
+      status: 'success',
+      message: 'SEO meta tags updated successfully',
+      data: updatedRecord
     });
   } catch (err) {
-    console.error('Error in updateMetaTags:', err);
+    console.error('Error in updateMetaTags:', {
+      message: err.message,
+      name: err.name,
+      stack: err.stack,
+      originalError: err.original ? {
+        code: err.original.code,
+        errno: err.original.errno,
+        sqlMessage: err.original.sqlMessage,
+        sql: err.original.sql,
+        parameters: err.original.parameters
+      } : null
+    });
+    
     res.status(500).json({ 
       status: 'error', 
       message: 'Failed to update SEO meta tags',
-      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      error: process.env.NODE_ENV === 'development' ? {
+        message: err.message,
+        sqlError: err.original ? {
+          code: err.original.code,
+          sqlMessage: err.original.sqlMessage
+        } : null
+      } : undefined
     });
   }
 };
 exports.deleteMetaTags = async (req, res) => {
-  const { id } = req.params;
+  const { identifier } = req.params;
 
-  if (!id) {
+  if (!identifier) {
     return res.status(400).json({ 
       status: 'error', 
-      message: 'ID parameter is required' 
+      message: 'Identifier parameter is required' 
     });
   }
 
   try {
-    const data = await SeoMetaTag.destroy({ where: { id } });
+    // Check if identifier is a number (ID) or string (page name)
+    const isNumeric = !isNaN(parseInt(identifier));
+    const whereClause = isNumeric ? { id: identifier } : { page: identifier };
 
-    if (!data) {
+    // First check if the record exists
+    const record = await SeoMetaTag.findOne({ where: whereClause });
+    
+    if (!record) {
       return res.status(404).json({ 
         status: 'not_found', 
-        message: 'No SEO data found for this ID' 
+        message: 'No SEO data found for this identifier' 
+      });
+    }
+
+    // Delete the record
+    const deletedCount = await SeoMetaTag.destroy({ where: whereClause });
+
+    if (deletedCount === 0) {
+      return res.status(500).json({ 
+        status: 'error', 
+        message: 'Failed to delete SEO meta tags' 
       });
     }
 
     res.status(200).json({ 
-      status: 'success', 
-      data 
+      status: 'success',
+      message: 'SEO meta tags deleted successfully'
     });
   } catch (err) {
-    console.error('Error in deleteMetaTags:', err);
+    console.error('Error in deleteMetaTags:', {
+      message: err.message,
+      name: err.name,
+      stack: err.stack,
+      originalError: err.original ? {
+        code: err.original.code,
+        errno: err.original.errno,
+        sqlMessage: err.original.sqlMessage,
+        sql: err.original.sql,
+        parameters: err.original.parameters
+      } : null
+    });
+    
     res.status(500).json({ 
       status: 'error', 
       message: 'Failed to delete SEO meta tags',
-      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+      error: process.env.NODE_ENV === 'development' ? {
+        message: err.message,
+        sqlError: err.original ? {
+          code: err.original.code,
+          sqlMessage: err.original.sqlMessage
+        } : null
+      } : undefined
     });
   }
 };
