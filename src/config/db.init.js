@@ -4,6 +4,7 @@ const Blog = require('../models/blog.model');
 const Job = require('../models/job.model');
 const JobApplication = require('../models/jobApplication.model');
 const Testimonial = require('../models/testimonial.model');
+const Team = require('../models/team.model');
 
 const syncDatabase = async () => {
     try {

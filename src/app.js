@@ -1,4 +1,6 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const cors = require('cors');
 const morgan = require('morgan');
 require('dotenv').config();
@@ -13,6 +15,7 @@ const authRoutes = require('./routes/auth.routes');
 const webuserRoutes = require('./routes/webuser.routes');
 const adminRoutes = require('./routes/adminRoutes');
 const seoRoutes = require('./routes/seo.routes');
+const teamRoutes = require('./routes/team.routes');
 const app = express();
 
 // Middleware
@@ -20,6 +23,28 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from the public directory
+const publicPath = path.join(__dirname, '../../public');
+console.log('Serving static files from:', publicPath);
+app.use(express.static(publicPath));
+
+// Serve team images
+app.use('/team', express.static(path.join(publicPath, 'team')));
+app.use('/team', express.static(path.join(publicPath, 'team')));
+
+// Test endpoint to verify static file serving
+app.get('/test-static', (req, res) => {
+    const testFilePath = path.join(publicPath, 'team/team-1753964325134-321275799.png');
+    const fileExists = fs.existsSync(testFilePath);
+  
+  res.json({
+    publicPath,
+    testFilePath,
+    fileExists,
+    filesInTeamDir: fileExists ? fs.readdirSync(path.join(publicPath, 'team')) : []
+  });
+});
 
 // Initialize database
 syncDatabase();
@@ -44,6 +69,7 @@ app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/webusers', webuserRoutes);
 app.use('/api/admins', adminRoutes);
 app.use('/api/seo', seoRoutes);
+app.use('/api/team', teamRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
