@@ -29,9 +29,9 @@ const publicPath = path.join(__dirname, '../../public');
 console.log('Serving static files from:', publicPath);
 app.use(express.static(publicPath));
 
-// Serve team images
+// Serve team images from both /team and /uploads/team paths
 app.use('/team', express.static(path.join(publicPath, 'team')));
-app.use('/team', express.static(path.join(publicPath, 'team')));
+app.use('/uploads/team', express.static(path.join(publicPath, 'team')));
 
 // Test endpoint to verify static file serving
 app.get('/test-static', (req, res) => {
