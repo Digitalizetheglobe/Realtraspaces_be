@@ -16,6 +16,7 @@ const webuserRoutes = require('./routes/webuser.routes');
 const adminRoutes = require('./routes/adminRoutes');
 const seoRoutes = require('./routes/seo.routes');
 const teamRoutes = require('./routes/team.routes');
+const developerRoutes = require('./routes/developer.routes');
 const app = express();
 
 // Middleware
@@ -32,6 +33,7 @@ app.use(express.static(publicPath));
 // Serve team images from both /team and /uploads/team paths
 app.use('/team', express.static(path.join(publicPath, 'team')));
 app.use('/uploads/team', express.static(path.join(publicPath, 'team')));
+app.use('/developers', express.static(path.join(publicPath, 'public/developers')));
 
 // Test endpoint to verify static file serving
 app.get('/test-static', (req, res) => {
@@ -70,6 +72,7 @@ app.use('/api/webusers', webuserRoutes);
 app.use('/api/admins', adminRoutes);
 app.use('/api/seo', seoRoutes);
 app.use('/api/team', teamRoutes);
+app.use('/api/developers', developerRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
