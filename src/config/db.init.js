@@ -5,6 +5,8 @@ const Job = require('../models/job.model');
 const JobApplication = require('../models/jobApplication.model');
 const Testimonial = require('../models/testimonial.model');
 const Team = require('../models/team.model');
+const PropertyListing = require('../models/propertyListing.model');
+const CookiePolicy = require('../models/cookiePolicy.model');
 
 const syncDatabase = async () => {
     try {
@@ -15,8 +17,12 @@ const syncDatabase = async () => {
         // Sync all models with the database
         // Use { alter: true } to update tables without dropping them
         // or use { force: true } to drop and recreate tables (WARNING: will delete all data)
-        // await sequelize.sync({ alter: true });
+        await sequelize.sync({ alter: true });
         console.log('All models were synchronized successfully.');
+
+        // Define associations
+        User.hasMany(CookiePolicy, { foreignKey: 'userId', as: 'cookiePolicies' });
+        CookiePolicy.belongsTo(User, { foreignKey: 'userId', as: 'user' });
         
         // IMPORTANT: Only uncomment and use force: true when you need to recreate tables
         // and are okay with losing all data

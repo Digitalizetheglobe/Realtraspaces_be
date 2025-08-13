@@ -17,6 +17,8 @@ const adminRoutes = require('./routes/adminRoutes');
 const seoRoutes = require('./routes/seo.routes');
 const teamRoutes = require('./routes/team.routes');
 const developerRoutes = require('./routes/developer.routes');
+const propertyListingRoutes = require('./routes/propertyListing.routes');
+const cookiePolicyRoutes = require('./routes/cookiePolicy.routes');
 const app = express();
 
 // Middleware
@@ -73,6 +75,8 @@ app.use('/api/admins', adminRoutes);
 app.use('/api/seo', seoRoutes);
 app.use('/api/team', teamRoutes);
 app.use('/api/developers', developerRoutes);
+app.use('/api/property-listings', propertyListingRoutes);
+app.use('/api/cookie-policy', cookiePolicyRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
