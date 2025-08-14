@@ -1,7 +1,7 @@
 // Simple test script to add sample cookie policy data
 // Run this in the browser console or use a tool like Postman
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://api.realtraspaces.com';
 
 // Sample data for testing
 const sampleData = [

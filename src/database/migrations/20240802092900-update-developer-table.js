@@ -2,45 +2,71 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // Get current table structure
+    const columns = await queryInterface.describeTable('developers');
+    
     // First, drop the existing columns if they exist with old names
-    await queryInterface.removeColumn('developers', 'builderLogo');
-    await queryInterface.removeColumn('developers', 'projectName');
+    if (columns.builderLogo) {
+      await queryInterface.removeColumn('developers', 'builderLogo');
+    }
+    if (columns.projectName) {
+      await queryInterface.removeColumn('developers', 'projectName');
+    }
     
-    // Then add the new columns with correct names
-    await queryInterface.addColumn('developers', 'builder_logo', {
-      type: Sequelize.STRING,
-      allowNull: true
-    });
+    // Then add the new columns with correct names (only if they don't exist)
+    if (!columns.builder_logo) {
+      await queryInterface.addColumn('developers', 'builder_logo', {
+        type: Sequelize.STRING,
+        allowNull: true
+      });
+    }
     
-    await queryInterface.addColumn('developers', 'project_name', {
-      type: Sequelize.JSON,
-      allowNull: true,
-      defaultValue: []
-    });
+    if (!columns.project_name) {
+      await queryInterface.addColumn('developers', 'project_name', {
+        type: Sequelize.JSON,
+        allowNull: true,
+        defaultValue: []
+      });
+    }
     
-    await queryInterface.addColumn('developers', 'status', {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: true
-    });
+    if (!columns.status) {
+      await queryInterface.addColumn('developers', 'status', {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      });
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
+    // Get current table structure
+    const columns = await queryInterface.describeTable('developers');
+    
     // Revert the changes if needed
-    await queryInterface.removeColumn('developers', 'builder_logo');
-    await queryInterface.removeColumn('developers', 'project_name');
-    await queryInterface.removeColumn('developers', 'status');
+    if (columns.builder_logo) {
+      await queryInterface.removeColumn('developers', 'builder_logo');
+    }
+    if (columns.project_name) {
+      await queryInterface.removeColumn('developers', 'project_name');
+    }
+    if (columns.status) {
+      await queryInterface.removeColumn('developers', 'status');
+    }
     
     // Add back the old columns if needed
-    await queryInterface.addColumn('developers', 'builderLogo', {
-      type: Sequelize.STRING,
-      allowNull: true
-    });
+    if (!columns.builderLogo) {
+      await queryInterface.addColumn('developers', 'builderLogo', {
+        type: Sequelize.STRING,
+        allowNull: true
+      });
+    }
     
-    await queryInterface.addColumn('developers', 'projectName', {
-      type: Sequelize.JSON,
-      allowNull: true,
-      defaultValue: []
-    });
+    if (!columns.projectName) {
+      await queryInterface.addColumn('developers', 'projectName', {
+        type: Sequelize.JSON,
+        allowNull: true,
+        defaultValue: []
+      });
+    }
   }
 };
