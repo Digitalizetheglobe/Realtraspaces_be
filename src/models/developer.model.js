@@ -20,11 +20,15 @@ const Developer = sequelize.define('Developer', {
     type: DataTypes.STRING,
     allowNull: true,
     validate: {
-      isUrlOrPath(value) {
+      isFilename(value) {
         if (value === null || value === '') return;
-        // This will accept both URLs and relative paths
+        // This will accept only filenames, not full URLs
         if (typeof value !== 'string') {
           throw new Error('Logo must be a string');
+        }
+        // Check if it's not a URL (shouldn't contain http:// or https://)
+        if (value.includes('http://') || value.includes('https://')) {
+          throw new Error('Logo should be a filename, not a URL');
         }
       }
     }
@@ -37,6 +41,29 @@ const Developer = sequelize.define('Developer', {
     type: DataTypes.JSON,
     allowNull: true,
     defaultValue: []
+  },
+  images: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: [],
+    validate: {
+      isArrayOfFilenames(value) {
+        if (value !== null && !Array.isArray(value)) {
+          throw new Error('Images must be an array');
+        }
+        if (Array.isArray(value)) {
+          value.forEach(filename => {
+            if (typeof filename !== 'string') {
+              throw new Error('Each image must be a string filename');
+            }
+            // Check if it's not a URL
+            if (filename.includes('http://') || filename.includes('https://')) {
+              throw new Error('Images should be filenames, not URLs');
+            }
+          });
+        }
+      }
+    }
   },
   status: {
     type: DataTypes.BOOLEAN,

@@ -47,6 +47,10 @@ const Webuser = sequelize.define('Webuser', {
     status: {
         type: DataTypes.ENUM('active', 'inactive'),
         defaultValue: 'active'
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
 }, {
     tableName: 'webusers',

@@ -179,3 +179,52 @@ exports.getAllWebUsers = async (req, res) => {
         });
     }
 };
+
+// @desc    Update user status (Admin only)
+// @route   PATCH /api/webusers/:id/status
+// @access  Private/Admin
+exports.updateUserStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { isActive } = req.body;
+
+        // Validate input
+        if (typeof isActive !== 'boolean') {
+            return res.status(400).json({
+                status: 'error',
+                message: 'isActive must be a boolean value'
+            });
+        }
+
+        // Find user by ID
+        const user = await Webuser.findByPk(id);
+        
+        if (!user) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'User not found'
+            });
+        }
+
+        // Update user status
+        await user.update({ isActive });
+
+        res.json({
+            status: 'success',
+            message: `User ${isActive ? 'activated' : 'deactivated'} successfully`,
+            data: {
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+                isActive: user.isActive
+            }
+        });
+    } catch (error) {
+        console.error('Update user status error:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error while updating user status',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};

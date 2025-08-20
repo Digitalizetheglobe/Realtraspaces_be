@@ -30,23 +30,36 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from the public directory
 const publicPath = path.join(__dirname, '../../public');
 console.log('Serving static files from:', publicPath);
+
+// Ensure required directories exist
+const developersDir = path.join(publicPath, 'developers');
+if (!fs.existsSync(developersDir)) {
+  fs.mkdirSync(developersDir, { recursive: true });
+  console.log('Created developers directory:', developersDir);
+}
+
 app.use(express.static(publicPath));
 
 // Serve team images from both /team and /uploads/team paths
 app.use('/team', express.static(path.join(publicPath, 'team')));
 app.use('/uploads/team', express.static(path.join(publicPath, 'team')));
-app.use('/developers', express.static(path.join(publicPath, 'public/developers')));
+app.use('/developers', express.static(path.join(publicPath, 'developers')));
 
 // Test endpoint to verify static file serving
 app.get('/test-static', (req, res) => {
     const testFilePath = path.join(publicPath, 'team/team-1753964325134-321275799.png');
     const fileExists = fs.existsSync(testFilePath);
+    const developersDir = path.join(publicPath, 'developers');
+    const developersDirExists = fs.existsSync(developersDir);
   
   res.json({
     publicPath,
     testFilePath,
     fileExists,
-    filesInTeamDir: fileExists ? fs.readdirSync(path.join(publicPath, 'team')) : []
+    filesInTeamDir: fileExists ? fs.readdirSync(path.join(publicPath, 'team')) : [],
+    developersDir,
+    developersDirExists,
+    filesInDevelopersDir: developersDirExists ? fs.readdirSync(developersDir) : []
   });
 });
 

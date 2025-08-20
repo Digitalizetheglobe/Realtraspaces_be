@@ -26,5 +26,6 @@ router.delete('/compare/clear', protect, propertyComparisonController.clearCompa
 
 // Admin routes
 router.get('/', protect, webuserController.getAllWebUsers);
+router.patch('/:id/status', protect, webuserController.updateUserStatus);
 
 module.exports = router;

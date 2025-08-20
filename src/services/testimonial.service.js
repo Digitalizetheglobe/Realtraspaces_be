@@ -12,11 +12,14 @@ class TestimonialService {
 
   async getAllTestimonials() {
     try {
+      console.log('Fetching all testimonials...');
       const testimonials = await Testimonial.findAll({
         where: { isActive: true }
       });
+      console.log(`Found ${testimonials.length} testimonials`);
       return testimonials;
     } catch (error) {
+      console.error('Error in getAllTestimonials:', error);
       throw new Error(`Error fetching testimonials: ${error.message}`);
     }
   }

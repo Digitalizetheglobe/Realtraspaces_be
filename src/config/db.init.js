@@ -7,6 +7,7 @@ const Testimonial = require('../models/testimonial.model');
 const Team = require('../models/team.model');
 const PropertyListing = require('../models/propertyListing.model');
 const CookiePolicy = require('../models/cookiePolicy.model');
+const Developer = require('../models/developer.model');
 
 const syncDatabase = async () => {
     try {
@@ -15,9 +16,9 @@ const syncDatabase = async () => {
         console.log('Database connection established successfully.');
 
         // Sync all models with the database
-        // Use { alter: true } to update tables without dropping them
+        // Use { alter: false } to prevent automatic table alterations that can cause duplicate indexes
         // or use { force: true } to drop and recreate tables (WARNING: will delete all data)
-        await sequelize.sync({ alter: true });
+        await sequelize.sync({ alter: false });
         console.log('All models were synchronized successfully.');
 
         // Define associations

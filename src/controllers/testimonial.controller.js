@@ -17,12 +17,15 @@ exports.createTestimonial = async (req, res) => {
 
 exports.getAllTestimonials = async (req, res) => {
   try {
+    console.log('GET /api/testimonials - Request received');
     const testimonials = await testimonialService.getAllTestimonials();
+    console.log('GET /api/testimonials - Success, returning testimonials');
     res.status(200).json({
       status: 'success',
       data: testimonials
     });
   } catch (error) {
+    console.error('GET /api/testimonials - Error:', error);
     res.status(500).json({
       status: 'error',
       message: error.message
