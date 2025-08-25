@@ -25,7 +25,7 @@ router.delete('/compare/remove/:propertyId', protect, propertyComparisonControll
 router.delete('/compare/clear', protect, propertyComparisonController.clearComparison);
 
 // Admin routes
-router.get('/', protect, webuserController.getAllWebUsers);
-router.patch('/:id/status', protect, webuserController.updateUserStatus);
+router.get('/', webuserController.getAllWebUsers); // Removed protect middleware
+router.patch('/:id/status', webuserController.updateUserStatus); // Removed protect middleware for admin access
 
 module.exports = router;

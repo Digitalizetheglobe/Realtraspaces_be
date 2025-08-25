@@ -103,6 +103,14 @@ exports.login = async (req, res) => {
             });
         }
 
+        // Check if user account is active
+        if (!user.isActive) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Account has been deactivated. Please contact administrator.'
+            });
+        }
+
         // Generate token
         const token = generateToken(user.id);
 

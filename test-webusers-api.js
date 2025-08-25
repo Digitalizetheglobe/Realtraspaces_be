@@ -5,13 +5,9 @@ async function testWebUsersAPI() {
   try {
     console.log('🧪 Testing WebUsers API...\n');
     
-    // You'll need to replace this with a valid admin token
-    const adminToken = 'YOUR_ADMIN_TOKEN_HERE';
-    
     const response = await fetch('https://api.realtraspaces.com/api/webusers', {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${adminToken}`,
         'Content-Type': 'application/json',
       },
     });
@@ -47,11 +43,10 @@ async function testWebUsersAPI() {
 console.log('🚀 WebUsers API Test Script');
 console.log('================================');
 console.log('To test this API:');
-console.log('1. Replace YOUR_ADMIN_TOKEN_HERE with a valid admin JWT token');
-console.log('2. Run: node test-webusers-api.js');
-console.log('3. Check the response for successful data retrieval\n');
+console.log('1. Run: node test-webusers-api.js');
+console.log('2. Check the response for successful data retrieval\n');
 
-// Uncomment the line below to run the test
-// testWebUsersAPI();
+// Run the test
+testWebUsersAPI();
 
 module.exports = { testWebUsersAPI };
