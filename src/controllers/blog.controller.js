@@ -1,5 +1,7 @@
 const blogService = require('../services/blog.service');
 const { uploadBlogImages } = require('../utils/fileUpload');
+const fs = require('fs');
+const path = require('path');
 
 // Middleware for handling blog image uploads
 exports.uploadBlogImages = uploadBlogImages;
@@ -9,6 +11,11 @@ exports.create = async (req, res) => {
     try {
         // Extract blog data from request body
         const blogData = { ...req.body };
+        
+        // Convert tags from string to array if it's a string
+        if (typeof blogData.tags === 'string') {
+            blogData.tags = blogData.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+        }
         
         // If files were uploaded, add their filenames to blogData
         if (req.files && req.files.length > 0) {
@@ -99,6 +106,11 @@ exports.update = async (req, res) => {
         // Extract blog data from request body
         const blogData = { ...req.body };
         
+        // Convert tags from string to array if it's a string
+        if (typeof blogData.tags === 'string') {
+            blogData.tags = blogData.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+        }
+        
         // If files were uploaded, add their filenames to blogData
         if (req.files && req.files.length > 0) {
             blogData.blogImages = req.files.map(file => file.filename);
@@ -162,6 +174,30 @@ exports.findBySlug = async (req, res) => {
         res.status(result.error === 'Blog not found' ? 404 : 500).json({
             status: 'error',
             message: result.error
+        });
+    }
+};
+
+// Serve blog image by filename
+exports.serveImage = async (req, res) => {
+    try {
+        const { filename } = req.params;
+        const imagePath = path.join(__dirname, '../../public/blogImages', filename);
+        
+        // Check if file exists
+        if (!fs.existsSync(imagePath)) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Image not found'
+            });
+        }
+        
+        // Serve the image file
+        res.sendFile(imagePath);
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to serve image: ' + error.message
         });
     }
 }; 

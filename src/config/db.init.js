@@ -16,9 +16,9 @@ const syncDatabase = async () => {
         console.log('Database connection established successfully.');
 
         // Sync all models with the database
-        // Use { alter: false } to prevent automatic table alterations that can cause duplicate indexes
+        // Use { alter: true } to automatically add new columns
         // or use { force: true } to drop and recreate tables (WARNING: will delete all data)
-        await sequelize.sync({ alter: false });
+        await sequelize.sync({ alter: true });
         console.log('All models were synchronized successfully.');
 
         // Define associations

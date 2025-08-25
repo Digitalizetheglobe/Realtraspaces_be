@@ -12,6 +12,9 @@ router.get('/', blogController.findAll);
 router.get('/:id', blogController.findOne);
 router.get('/slug/:slug', blogController.findBySlug);
 
+// Route to serve blog images
+router.get('/image/:filename', blogController.serveImage);
+
 router.put('/:id', 
     blogController.uploadBlogImages, // Handle file uploads
     blogController.update

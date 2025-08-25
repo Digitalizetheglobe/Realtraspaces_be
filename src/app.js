@@ -28,8 +28,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the public directory
-const publicPath = path.join(__dirname, '../../public');
+const publicPath = path.join(__dirname, '../public');
 console.log('Serving static files from:', publicPath);
+
+// Ensure blogImages directory exists in the correct location
+const blogImagesDir = path.join(publicPath, 'blogImages');
+if (!fs.existsSync(blogImagesDir)) {
+  fs.mkdirSync(blogImagesDir, { recursive: true });
+  console.log('Created blogImages directory:', blogImagesDir);
+}
 
 // Ensure required directories exist
 const developersDir = path.join(publicPath, 'developers');
@@ -45,12 +52,41 @@ app.use('/team', express.static(path.join(publicPath, 'team')));
 app.use('/uploads/team', express.static(path.join(publicPath, 'team')));
 app.use('/developers', express.static(path.join(publicPath, 'developers')));
 
+// Serve blog images
+app.use('/blogImages', express.static(path.join(publicPath, 'blogImages')));
+
+// Test endpoint for blog images
+app.get('/test-blog-images', (req, res) => {
+    const blogImagesDir = path.join(publicPath, 'blogImages');
+    const blogImagesDirExists = fs.existsSync(blogImagesDir);
+    
+    if (blogImagesDirExists) {
+        const files = fs.readdirSync(blogImagesDir);
+        res.json({
+            blogImagesDir,
+            exists: true,
+            files: files,
+            sampleFile: files.length > 0 ? files[0] : null,
+            sampleFilePath: files.length > 0 ? path.join(blogImagesDir, files[0]) : null,
+            sampleFileExists: files.length > 0 ? fs.existsSync(path.join(blogImagesDir, files[0])) : false
+        });
+    } else {
+        res.json({
+            blogImagesDir,
+            exists: false,
+            error: 'Blog images directory not found'
+        });
+    }
+});
+
 // Test endpoint to verify static file serving
 app.get('/test-static', (req, res) => {
     const testFilePath = path.join(publicPath, 'team/team-1753964325134-321275799.png');
     const fileExists = fs.existsSync(testFilePath);
     const developersDir = path.join(publicPath, 'developers');
     const developersDirExists = fs.existsSync(developersDir);
+    const blogImagesDir = path.join(publicPath, 'blogImages');
+    const blogImagesDirExists = fs.existsSync(blogImagesDir);
   
   res.json({
     publicPath,
@@ -59,7 +95,10 @@ app.get('/test-static', (req, res) => {
     filesInTeamDir: fileExists ? fs.readdirSync(path.join(publicPath, 'team')) : [],
     developersDir,
     developersDirExists,
-    filesInDevelopersDir: developersDirExists ? fs.readdirSync(developersDir) : []
+    filesInDevelopersDir: developersDirExists ? fs.readdirSync(developersDir) : [],
+    blogImagesDir,
+    blogImagesDirExists,
+    filesInBlogImagesDir: blogImagesDirExists ? fs.readdirSync(blogImagesDir) : []
   });
 });
 

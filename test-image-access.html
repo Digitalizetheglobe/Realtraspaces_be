@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Image Access</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-image {
+            max-width: 300px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Image Access</h1>
+    
+    <h2>Old Image (should work):</h2>
+    <div id="old-image-status" class="status">Loading...</div>
+    <img id="old-image" class="test-image" src="http://localhost:8000/blogImages/blog-1756101794399-987863174.jpg" 
+         alt="Old Image" onload="imageLoaded('old-image-status', true)" onerror="imageLoaded('old-image-status', false)">
+    
+    <h2>New Image (should work after fix):</h2>
+    <div id="new-image-status" class="status">Loading...</div>
+    <img id="new-image" class="test-image" src="http://localhost:8000/blogImages/blog-1756102415079-444066052.jpg" 
+         alt="New Image" onload="imageLoaded('new-image-status', true)" onerror="imageLoaded('new-image-status', false)">
+    
+    <h2>Test Direct Access:</h2>
+    <button onclick="testImageAccess()">Test Image Access</button>
+    <div id="test-results"></div>
+
+    <script>
+        function imageLoaded(elementId, success) {
+            const element = document.getElementById(elementId);
+            if (success) {
+                element.className = 'status success';
+                element.textContent = '✅ Image loaded successfully';
+            } else {
+                element.className = 'status error';
+                element.textContent = '❌ Image failed to load';
+            }
+        }
+
+        async function testImageAccess() {
+            const results = document.getElementById('test-results');
+            results.innerHTML = '<div class="status">Testing...</div>';
+            
+            const images = [
+                'blog-1756101794399-987863174.jpg',
+                'blog-1756102415079-444066052.jpg'
+            ];
+            
+            let html = '';
+            
+            for (const image of images) {
+                try {
+                    const response = await fetch(`http://localhost:8000/blogImages/${image}`, {
+                        method: 'HEAD'
+                    });
+                    
+                    if (response.ok) {
+                        html += `<div class="status success">✅ ${image} - Status: ${response.status}</div>`;
+                    } else {
+                        html += `<div class="status error">❌ ${image} - Status: ${response.status}</div>`;
+                    }
+                } catch (error) {
+                    html += `<div class="status error">❌ ${image} - Error: ${error.message}</div>`;
+                }
+            }
+            
+            results.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
