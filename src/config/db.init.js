@@ -8,6 +8,9 @@ const Team = require('../models/team.model');
 const PropertyListing = require('../models/propertyListing.model');
 const CookiePolicy = require('../models/cookiePolicy.model');
 const Developer = require('../models/developer.model');
+const Webuser = require('../models/webuser.model');
+const SavedProperty = require('../models/savedProperty.model');
+const PropertyComparison = require('../models/propertyComparison.model');
 
 const syncDatabase = async () => {
     try {
@@ -24,6 +27,13 @@ const syncDatabase = async () => {
         // Define associations
         User.hasMany(CookiePolicy, { foreignKey: 'userId', as: 'cookiePolicies' });
         CookiePolicy.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+        
+        // Webuser associations
+        Webuser.hasMany(SavedProperty, { foreignKey: 'webUserId', as: 'savedProperties' });
+        SavedProperty.belongsTo(Webuser, { foreignKey: 'webUserId', as: 'user' });
+        
+        Webuser.hasMany(PropertyComparison, { foreignKey: 'webUserId', as: 'propertyComparisons' });
+        PropertyComparison.belongsTo(Webuser, { foreignKey: 'webUserId', as: 'user' });
         
         // IMPORTANT: Only uncomment and use force: true when you need to recreate tables
         // and are okay with losing all data

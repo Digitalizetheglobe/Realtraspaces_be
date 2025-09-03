@@ -59,17 +59,6 @@ const PropertyComparison = sequelize.define('PropertyComparison', {
     ]
 });
 
-// Define association with explicit field names
-WebUser.hasMany(PropertyComparison, { 
-    foreignKey: 'webUserId',
-    targetKey: 'id',
-    as: 'propertyComparisons'
-});
-
-PropertyComparison.belongsTo(WebUser, { 
-    foreignKey: 'webUserId',
-    targetKey: 'id',
-    as: 'user'
-});
+// Associations are now defined in db.init.js to avoid duplicate definitions
 
 module.exports = PropertyComparison;

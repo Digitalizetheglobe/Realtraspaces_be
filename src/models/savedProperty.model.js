@@ -58,17 +58,6 @@ const SavedProperty = sequelize.define('SavedProperty', {
     ]
 });
 
-// Define association with explicit field names
-WebUser.hasMany(SavedProperty, { 
-    foreignKey: 'webUserId',
-    targetKey: 'id',
-    as: 'savedProperties'
-});
-
-SavedProperty.belongsTo(WebUser, { 
-    foreignKey: 'webUserId',
-    targetKey: 'id',
-    as: 'user'
-});
+// Associations are now defined in db.init.js to avoid duplicate definitions
 
 module.exports = SavedProperty;
