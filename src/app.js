@@ -19,6 +19,9 @@ const teamRoutes = require('./routes/team.routes');
 const developerRoutes = require('./routes/developer.routes');
 const propertyListingRoutes = require('./routes/propertyListing.routes');
 const cookiePolicyRoutes = require('./routes/cookiePolicy.routes');
+const awardRoutes = require('./routes/award.routes');
+const cvSubmissionRoutes = require('./routes/cvSubmission.routes');
+const contactRoutes = require('./routes/contact.routes');
 const app = express();
 
 // Middleware
@@ -45,6 +48,20 @@ if (!fs.existsSync(developersDir)) {
   console.log('Created developers directory:', developersDir);
 }
 
+// Ensure awardsimages directory exists
+const awardsImagesDir = path.join(publicPath, 'awardsimages');
+if (!fs.existsSync(awardsImagesDir)) {
+  fs.mkdirSync(awardsImagesDir, { recursive: true });
+  console.log('Created awardsimages directory:', awardsImagesDir);
+}
+
+// Ensure resume directory exists
+const resumeDir = path.join(publicPath, 'resume');
+if (!fs.existsSync(resumeDir)) {
+  fs.mkdirSync(resumeDir, { recursive: true });
+  console.log('Created resume directory:', resumeDir);
+}
+
 app.use(express.static(publicPath));
 
 // Serve team images from both /team and /uploads/team paths
@@ -54,6 +71,12 @@ app.use('/developers', express.static(path.join(publicPath, 'developers')));
 
 // Serve blog images
 app.use('/blogImages', express.static(path.join(publicPath, 'blogImages')));
+
+// Serve award images
+app.use('/awardsimages', express.static(path.join(publicPath, 'awardsimages')));
+
+// Serve resume/CV files
+app.use('/resume', express.static(path.join(publicPath, 'resume')));
 
 // Test endpoint for blog images
 app.get('/test-blog-images', (req, res) => {
@@ -129,6 +152,9 @@ app.use('/api/team', teamRoutes);
 app.use('/api/developers', developerRoutes);
 app.use('/api/property-listings', propertyListingRoutes);
 app.use('/api/cookie-policy', cookiePolicyRoutes);
+app.use('/api/awards', awardRoutes);
+app.use('/api/cv-submissions', cvSubmissionRoutes);
+app.use('/api/contacts', contactRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

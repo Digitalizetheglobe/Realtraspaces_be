@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Submission API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="file"], 
+        textarea, select, input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button.danger {
+            background-color: #dc3545;
+        }
+        button.danger:hover {
+            background-color: #c82333;
+        }
+        .response {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .submissions-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .submission-item {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+        }
+        .submission-item h3 {
+            margin-top: 0;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-pending { background-color: #ffc107; color: #000; }
+        .status-reviewed { background-color: #17a2b8; color: #fff; }
+        .status-contacted { background-color: #28a745; color: #fff; }
+        .status-rejected { background-color: #dc3545; color: #fff; }
+        .file-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .file-link:hover {
+            text-decoration: underline;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>CV Submission API Test</h1>
+    
+    <!-- Submit CV Form (Public) -->
+    <div class="form-container">
+        <h2>Submit Your CV</h2>
+        <form id="submitCVForm">
+            <div class="form-group">
+                <label for="first_name">First Name: <span class="required">*</span></label>
+                <input type="text" id="first_name" name="first_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last_name">Last Name: <span class="required">*</span></label>
+                <input type="text" id="last_name" name="last_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number">Phone Number: <span class="required">*</span></label>
+                <input type="tel" id="phone_number" name="phone_number" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email_id">Email ID: <span class="required">*</span></label>
+                <input type="email" id="email_id" name="email_id" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" placeholder="Tell us about yourself or the position you're interested in"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="cv_file">Upload Your CV (PDF or Image):</label>
+                <input type="file" id="cv_file" name="cv_file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp">
+                <small>Supported formats: PDF, JPEG, PNG, GIF, WebP (Max: 10MB)</small>
+            </div>
+            
+            <button type="submit">Submit CV</button>
+        </form>
+        <div id="submitResponse" class="response"></div>
+    </div>
+
+    <!-- Statistics Dashboard (Admin) -->
+    <div class="form-container">
+        <h2>CV Submission Statistics</h2>
+        <button onclick="getSubmissionStats()">Load Statistics</button>
+        <div id="statsContainer" class="stats-container"></div>
+        <div id="statsResponse" class="response"></div>
+    </div>
+
+    <!-- Get All Submissions (Admin) -->
+    <div class="form-container">
+        <h2>Manage CV Submissions (Admin)</h2>
+        <div class="filters">
+            <div class="form-group">
+                <label for="searchSubmissions">Search:</label>
+                <input type="text" id="searchSubmissions" placeholder="Search by name, email, or phone">
+            </div>
+            <div class="form-group">
+                <label for="statusFilter">Status Filter:</label>
+                <select id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="reviewed">Reviewed</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pageNumber">Page:</label>
+                <input type="number" id="pageNumber" value="1" min="1">
+            </div>
+            <div class="form-group">
+                <label for="pageLimit">Per Page:</label>
+                <select id="pageLimit">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+        <button onclick="getAllSubmissions()">Load Submissions</button>
+        <div id="getAllResponse" class="response"></div>
+    </div>
+
+    <!-- Get Submission by ID -->
+    <div class="form-container">
+        <h2>Get Submission by ID</h2>
+        <div class="form-group">
+            <label for="getSubmissionId">Submission ID:</label>
+            <input type="text" id="getSubmissionId" placeholder="Enter submission ID">
+        </div>
+        <button onclick="getSubmissionById()">Get Submission</button>
+        <div id="getByIdResponse" class="response"></div>
+    </div>
+
+    <!-- Update Submission Status -->
+    <div class="form-container">
+        <h2>Update Submission Status (Admin)</h2>
+        <div class="form-group">
+            <label for="updateSubmissionId">Submission ID:</label>
+            <input type="text" id="updateSubmissionId" placeholder="Enter submission ID" required>
+        </div>
+        <div class="form-group">
+            <label for="updateStatus">New Status:</label>
+            <select id="updateStatus" required>
+                <option value="">Select Status</option>
+                <option value="pending">Pending</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="contacted">Contacted</option>
+                <option value="rejected">Rejected</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="adminNotes">Admin Notes:</label>
+            <textarea id="adminNotes" placeholder="Internal notes about this submission"></textarea>
+        </div>
+        <button onclick="updateSubmissionStatus()">Update Status</button>
+        <div id="updateResponse" class="response"></div>
+    </div>
+
+    <!-- Delete Submission -->
+    <div class="form-container">
+        <h2>Delete Submission (Admin)</h2>
+        <div class="form-group">
+            <label for="deleteSubmissionId">Submission ID:</label>
+            <input type="text" id="deleteSubmissionId" placeholder="Enter submission ID">
+        </div>
+        <button onclick="deleteSubmission()" class="danger">Delete Submission</button>
+        <div id="deleteResponse" class="response"></div>
+    </div>
+
+    <!-- Submissions List -->
+    <div class="submissions-list">
+        <h2>CV Submissions List</h2>
+        <button onclick="loadSubmissionsList()">Load Submissions</button>
+        <div id="submissionsList"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/cv-submissions';
+
+        // Submit CV
+        document.getElementById('submitCVForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch(`${API_BASE}/submit`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                const responseDiv = document.getElementById('submitResponse');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                responseDiv.className = response.ok ? 'response success' : 'response error';
+                
+                if (response.ok) {
+                    e.target.reset();
+                    loadSubmissionsList(); // Refresh the list
+                    getSubmissionStats(); // Refresh stats
+                }
+            } catch (error) {
+                const responseDiv = document.getElementById('submitResponse');
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            }
+        });
+
+        // Get Submission Statistics
+        async function getSubmissionStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    const statsContainer = document.getElementById('statsContainer');
+                    const data = result.data;
+                    
+                    statsContainer.innerHTML = `
+                        <div class="stat-card">
+                            <div class="stat-number">${data.total}</div>
+                            <div class="stat-label">Total Submissions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${data.byStatus.pending || 0}</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${data.byStatus.reviewed || 0}</div>
+                            <div class="stat-label">Reviewed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${data.byStatus.contacted || 0}</div>
+                            <div class="stat-label">Contacted</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${data.byStatus.rejected || 0}</div>
+                            <div class="stat-label">Rejected</div>
+                        </div>
+                    `;
+                }
+                
+                const responseDiv = document.getElementById('statsResponse');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                responseDiv.className = response.ok ? 'response success' : 'response error';
+            } catch (error) {
+                const responseDiv = document.getElementById('statsResponse');
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            }
+        }
+
+        // Get All Submissions
+        async function getAllSubmissions() {
+            const search = document.getElementById('searchSubmissions').value;
+            const status = document.getElementById('statusFilter').value;
+            const page = document.getElementById('pageNumber').value;
+            const limit = document.getElementById('pageLimit').value;
+            
+            const params = new URLSearchParams();
+            if (search) params.append('search', search);
+            if (status) params.append('status', status);
+            if (page) params.append('page', page);
+            if (limit) params.append('limit', limit);
+            
+            const url = `${API_BASE}?${params.toString()}`;
+            
+            try {
+                const response = await fetch(url);
+                const result = await response.json();
+                const responseDiv = document.getElementById('getAllResponse');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                responseDiv.className = response.ok ? 'response success' : 'response error';
+            } catch (error) {
+                const responseDiv = document.getElementById('getAllResponse');
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            }
+        }
+
+        // Get Submission by ID
+        async function getSubmissionById() {
+            const id = document.getElementById('getSubmissionId').value;
+            if (!id) {
+                alert('Please enter a submission ID');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/${id}`);
+                const result = await response.json();
+                const responseDiv = document.getElementById('getByIdResponse');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                responseDiv.className = response.ok ? 'response success' : 'response error';
+            } catch (error) {
+                const responseDiv = document.getElementById('getByIdResponse');
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            }
+        }
+
+        // Update Submission Status
+        async function updateSubmissionStatus() {
+            const id = document.getElementById('updateSubmissionId').value;
+            const status = document.getElementById('updateStatus').value;
+            const admin_notes = document.getElementById('adminNotes').value;
+            
+            if (!id || !status) {
+                alert('Please enter submission ID and select a status');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/${id}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        status,
+                        admin_notes: admin_notes || undefined
+                    })
+                });
+                
+                const result = await response.json();
+                const responseDiv = document.getElementById('updateResponse');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                responseDiv.className = response.ok ? 'response success' : 'response error';
+                
+                if (response.ok) {
+                    loadSubmissionsList(); // Refresh the list
+                    getSubmissionStats(); // Refresh stats
+                }
+            } catch (error) {
+                const responseDiv = document.getElementById('updateResponse');
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            }
+        }
+
+        // Delete Submission
+        async function deleteSubmission() {
+            const id = document.getElementById('deleteSubmissionId').value;
+            if (!id) {
+                alert('Please enter a submission ID');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to delete this submission? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                const responseDiv = document.getElementById('deleteResponse');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                responseDiv.className = response.ok ? 'response success' : 'response error';
+                
+                if (response.ok) {
+                    document.getElementById('deleteSubmissionId').value = '';
+                    loadSubmissionsList(); // Refresh the list
+                    getSubmissionStats(); // Refresh stats
+                }
+            } catch (error) {
+                const responseDiv = document.getElementById('deleteResponse');
+                responseDiv.textContent = 'Error: ' + error.message;
+                responseDiv.className = 'response error';
+            }
+        }
+
+        // Load Submissions List
+        async function loadSubmissionsList() {
+            try {
+                const response = await fetch(`${API_BASE}?limit=20`);
+                const result = await response.json();
+                const listDiv = document.getElementById('submissionsList');
+                
+                if (response.ok && result.success) {
+                    listDiv.innerHTML = result.data.map(submission => `
+                        <div class="submission-item">
+                            <h3>${submission.first_name} ${submission.last_name}</h3>
+                            <p><strong>ID:</strong> ${submission.id}</p>
+                            <p><strong>Email:</strong> ${submission.email_id}</p>
+                            <p><strong>Phone:</strong> ${submission.phone_number}</p>
+                            <p><strong>Status:</strong> <span class="status-badge status-${submission.status}">${submission.status}</span></p>
+                            <p><strong>Submitted:</strong> ${new Date(submission.submission_date).toLocaleString()}</p>
+                            ${submission.message ? `<p><strong>Message:</strong> ${submission.message}</p>` : ''}
+                            ${submission.cv_file_url ? `
+                                <p><strong>CV File:</strong> 
+                                    <a href="${submission.cv_file_url}" target="_blank" class="file-link">
+                                        ${submission.cv_file}
+                                    </a>
+                                    <br>
+                                    <a href="${API_BASE}/download/${submission.cv_file}" class="file-link">
+                                        Download CV
+                                    </a>
+                                </p>
+                            ` : '<p><strong>CV File:</strong> No file uploaded</p>'}
+                            ${submission.admin_notes ? `<p><strong>Admin Notes:</strong> ${submission.admin_notes}</p>` : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    listDiv.innerHTML = `<div class="error">Error loading submissions: ${result.message || 'Unknown error'}</div>`;
+                }
+            } catch (error) {
+                const listDiv = document.getElementById('submissionsList');
+                listDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Load data on page load
+        loadSubmissionsList();
+        getSubmissionStats();
+    </script>
+</body>
+</html>

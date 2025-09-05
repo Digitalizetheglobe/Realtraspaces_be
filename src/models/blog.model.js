@@ -68,18 +68,7 @@ const Blog = sequelize.define('Blog', {
     freezeTableName: true
 });
 
-// Sync this model - force: false for production, alter: true for development
-// In production, you should use migrations instead of sync
-Blog.sync({ force: false, alter: true })
-    .then(() => {
-        console.log('Blog table synced successfully');
-    })
-    .catch(err => {
-        console.error('Error syncing Blog table:', err);
-        // Don't exit process in production, just log the error
-        if (process.env.NODE_ENV === 'development') {
-            process.exit(1);
-        }
-    });
+// Note: Using migrations instead of automatic sync to avoid index conflicts
+// If you need to sync manually in development, use: Blog.sync({ force: false, alter: false })
 
 module.exports = Blog; 

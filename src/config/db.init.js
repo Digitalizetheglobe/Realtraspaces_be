@@ -18,17 +18,12 @@ const syncDatabase = async () => {
         await sequelize.authenticate();
         console.log('Database connection established successfully.');
 
-        // Sync all models with the database
-        // Use { alter: true } to automatically add new columns
-        // or use { force: true } to drop and recreate tables (WARNING: will delete all data)
         await sequelize.sync({ alter: true });
         console.log('All models were synchronized successfully.');
 
-        // Define associations
         User.hasMany(CookiePolicy, { foreignKey: 'userId', as: 'cookiePolicies' });
         CookiePolicy.belongsTo(User, { foreignKey: 'userId', as: 'user' });
         
-        // Webuser associations
         Webuser.hasMany(SavedProperty, { foreignKey: 'webUserId', as: 'savedProperties' });
         SavedProperty.belongsTo(Webuser, { foreignKey: 'webUserId', as: 'user' });
         
