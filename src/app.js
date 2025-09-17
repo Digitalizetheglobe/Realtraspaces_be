@@ -22,6 +22,7 @@ const cookiePolicyRoutes = require('./routes/cookiePolicy.routes');
 const awardRoutes = require('./routes/award.routes');
 const cvSubmissionRoutes = require('./routes/cvSubmission.routes');
 const contactRoutes = require('./routes/contact.routes');
+const counterStatsRoutes = require('./routes/counterStats.routes');
 const app = express();
 
 // Middleware
@@ -155,6 +156,7 @@ app.use('/api/cookie-policy', cookiePolicyRoutes);
 app.use('/api/awards', awardRoutes);
 app.use('/api/cv-submissions', cvSubmissionRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/counter-stats', counterStatsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

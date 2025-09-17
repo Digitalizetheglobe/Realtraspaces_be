@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter Stats API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .danger {
+            background-color: #dc3545;
+        }
+        .danger:hover {
+            background-color: #c82333;
+        }
+        .success {
+            background-color: #28a745;
+        }
+        .success:hover {
+            background-color: #218838;
+        }
+        .warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .warning:hover {
+            background-color: #e0a800;
+        }
+        .response {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .current-stats {
+            background-color: #e8f4f8;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .flex-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .flex-item {
+            flex: 1;
+            min-width: 300px;
+        }
+        .url-display {
+            background-color: #e9ecef;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Counter Statistics API Test Interface</h1>
+        <p>Test the Counter Stats API endpoints. The API manages counter statistics for Years in Business, Properties Sold, Happy Clients, Awards Won, and 2 demo fields.</p>
+        
+        <div id="currentStats" class="current-stats">
+            <h3>Current Counter Statistics</h3>
+            <button onclick="loadCurrentStats()">Refresh Stats</button>
+            <div id="statsDisplay"></div>
+        </div>
+    </div>
+
+    <div class="flex-container">
+        <!-- GET Current Stats -->
+        <div class="container flex-item">
+            <h2>1. Get Current Counter Stats</h2>
+            <div class="url-display">GET /api/counter-stats/</div>
+            <button onclick="getCurrentStats()">Get Current Stats</button>
+            <div id="getCurrentResponse" class="response"></div>
+        </div>
+
+        <!-- GET All Stats -->
+        <div class="container flex-item">
+            <h2>2. Get All Counter Stats</h2>
+            <div class="url-display">GET /api/counter-stats/all</div>
+            <div class="form-group">
+                <label>Page:</label>
+                <input type="number" id="getAllPage" value="1" min="1">
+            </div>
+            <div class="form-group">
+                <label>Limit:</label>
+                <input type="number" id="getAllLimit" value="10" min="1" max="100">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="includeInactive"> Include Inactive Records
+                </label>
+            </div>
+            <button onclick="getAllStats()">Get All Stats</button>
+            <div id="getAllResponse" class="response"></div>
+        </div>
+    </div>
+
+    <div class="flex-container">
+        <!-- CREATE New Stats -->
+        <div class="container flex-item">
+            <h2>3. Create New Counter Stats</h2>
+            <div class="url-display">POST /api/counter-stats/create</div>
+            <div class="form-group">
+                <label>Years in Business:</label>
+                <input type="number" id="createYears" value="8" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Properties Sold:</label>
+                <input type="number" id="createProperties" value="1250" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Happy Clients:</label>
+                <input type="number" id="createClients" value="500" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Awards Won:</label>
+                <input type="number" id="createAwards" value="25" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Demo Field 1:</label>
+                <input type="number" id="createDemo1" value="100" min="0">
+            </div>
+            <div class="form-group">
+                <label>Demo Field 1 Label:</label>
+                <input type="text" id="createDemo1Label" value="Demo Metric 1">
+            </div>
+            <div class="form-group">
+                <label>Demo Field 2:</label>
+                <input type="number" id="createDemo2" value="200" min="0">
+            </div>
+            <div class="form-group">
+                <label>Demo Field 2 Label:</label>
+                <input type="text" id="createDemo2Label" value="Demo Metric 2">
+            </div>
+            <button class="success" onclick="createStats()">Create Stats</button>
+            <div id="createResponse" class="response"></div>
+        </div>
+
+        <!-- UPDATE Active Stats -->
+        <div class="container flex-item">
+            <h2>4. Update Active Counter Stats</h2>
+            <div class="url-display">PUT /api/counter-stats/active</div>
+            <div class="form-group">
+                <label>Years in Business:</label>
+                <input type="number" id="updateYears" min="0">
+            </div>
+            <div class="form-group">
+                <label>Properties Sold:</label>
+                <input type="number" id="updateProperties" min="0">
+            </div>
+            <div class="form-group">
+                <label>Happy Clients:</label>
+                <input type="number" id="updateClients" min="0">
+            </div>
+            <div class="form-group">
+                <label>Awards Won:</label>
+                <input type="number" id="updateAwards" min="0">
+            </div>
+            <div class="form-group">
+                <label>Demo Field 1:</label>
+                <input type="number" id="updateDemo1" min="0">
+            </div>
+            <div class="form-group">
+                <label>Demo Field 1 Label:</label>
+                <input type="text" id="updateDemo1Label">
+            </div>
+            <div class="form-group">
+                <label>Demo Field 2:</label>
+                <input type="number" id="updateDemo2" min="0">
+            </div>
+            <div class="form-group">
+                <label>Demo Field 2 Label:</label>
+                <input type="text" id="updateDemo2Label">
+            </div>
+            <button class="warning" onclick="updateActiveStats()">Update Active Stats</button>
+            <div id="updateActiveResponse" class="response"></div>
+        </div>
+    </div>
+
+    <div class="flex-container">
+        <!-- UPDATE by ID -->
+        <div class="container flex-item">
+            <h2>5. Update Counter Stats by ID</h2>
+            <div class="url-display">PUT /api/counter-stats/:id</div>
+            <div class="form-group">
+                <label>Counter Stats ID:</label>
+                <input type="number" id="updateId" required>
+            </div>
+            <div class="form-group">
+                <label>Years in Business:</label>
+                <input type="number" id="updateByIdYears" min="0">
+            </div>
+            <div class="form-group">
+                <label>Properties Sold:</label>
+                <input type="number" id="updateByIdProperties" min="0">
+            </div>
+            <div class="form-group">
+                <label>Happy Clients:</label>
+                <input type="number" id="updateByIdClients" min="0">
+            </div>
+            <div class="form-group">
+                <label>Awards Won:</label>
+                <input type="number" id="updateByIdAwards" min="0">
+            </div>
+            <button class="warning" onclick="updateStatsById()">Update by ID</button>
+            <div id="updateByIdResponse" class="response"></div>
+        </div>
+
+        <!-- DELETE by ID -->
+        <div class="container flex-item">
+            <h2>6. Delete Counter Stats by ID</h2>
+            <div class="url-display">DELETE /api/counter-stats/:id</div>
+            <div class="form-group">
+                <label>Counter Stats ID:</label>
+                <input type="number" id="deleteId" required>
+            </div>
+            <button class="danger" onclick="deleteStatsById()">Delete Stats</button>
+            <div id="deleteResponse" class="response"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>7. Reset Counter Stats to Default</h2>
+        <div class="url-display">POST /api/counter-stats/reset?confirm=true</div>
+        <p style="color: #dc3545; font-weight: bold;">⚠️ This will deactivate all existing counter stats and create new default ones!</p>
+        <button class="danger" onclick="resetStats()">Reset to Default Values</button>
+        <div id="resetResponse" class="response"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/counter-stats';
+
+        // Load and display current stats on page load
+        window.onload = function() {
+            loadCurrentStats();
+        };
+
+        async function makeRequest(url, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                const data = await response.json();
+                
+                return {
+                    status: response.status,
+                    data: data,
+                    ok: response.ok
+                };
+            } catch (error) {
+                return {
+                    status: 0,
+                    data: { error: error.message },
+                    ok: false
+                };
+            }
+        }
+
+        function displayResponse(elementId, response) {
+            const element = document.getElementById(elementId);
+            element.textContent = JSON.stringify(response, null, 2);
+            element.style.color = response.ok ? '#28a745' : '#dc3545';
+        }
+
+        function displayStats(stats) {
+            const display = document.getElementById('statsDisplay');
+            if (!stats) {
+                display.innerHTML = '<p>No stats loaded</p>';
+                return;
+            }
+
+            display.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.yearsInBusiness}+</div>
+                        <div class="stat-label">Years in Business</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.propertiesSold}+</div>
+                        <div class="stat-label">Properties Sold</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.happyClients}+</div>
+                        <div class="stat-label">Happy Clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.awardsWon}+</div>
+                        <div class="stat-label">Awards Won</div>
+                    </div>
+                    ${stats.demoField1 !== null ? `
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.demoField1}+</div>
+                            <div class="stat-label">${stats.demoField1Label || 'Demo Field 1'}</div>
+                        </div>
+                    ` : ''}
+                    ${stats.demoField2 !== null ? `
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.demoField2}+</div>
+                            <div class="stat-label">${stats.demoField2Label || 'Demo Field 2'}</div>
+                        </div>
+                    ` : ''}
+                </div>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                    Last updated: ${new Date(stats.updatedAt).toLocaleString()}
+                </p>
+            `;
+        }
+
+        async function loadCurrentStats() {
+            const response = await makeRequest(API_BASE);
+            if (response.ok && response.data.success) {
+                displayStats(response.data.data);
+            } else {
+                document.getElementById('statsDisplay').innerHTML = '<p style="color: #dc3545;">Failed to load stats</p>';
+            }
+        }
+
+        async function getCurrentStats() {
+            const response = await makeRequest(API_BASE);
+            displayResponse('getCurrentResponse', response);
+        }
+
+        async function getAllStats() {
+            const page = document.getElementById('getAllPage').value;
+            const limit = document.getElementById('getAllLimit').value;
+            const includeInactive = document.getElementById('includeInactive').checked;
+            
+            let url = `${API_BASE}/all?page=${page}&limit=${limit}`;
+            if (includeInactive) {
+                url += '&includeInactive=true';
+            }
+            
+            const response = await makeRequest(url);
+            displayResponse('getAllResponse', response);
+        }
+
+        async function createStats() {
+            const body = {
+                yearsInBusiness: parseInt(document.getElementById('createYears').value),
+                propertiesSold: parseInt(document.getElementById('createProperties').value),
+                happyClients: parseInt(document.getElementById('createClients').value),
+                awardsWon: parseInt(document.getElementById('createAwards').value),
+                demoField1: document.getElementById('createDemo1').value ? parseInt(document.getElementById('createDemo1').value) : null,
+                demoField1Label: document.getElementById('createDemo1Label').value || null,
+                demoField2: document.getElementById('createDemo2').value ? parseInt(document.getElementById('createDemo2').value) : null,
+                demoField2Label: document.getElementById('createDemo2Label').value || null
+            };
+
+            const response = await makeRequest(`${API_BASE}/create`, 'POST', body);
+            displayResponse('createResponse', response);
+            
+            if (response.ok) {
+                loadCurrentStats();
+            }
+        }
+
+        async function updateActiveStats() {
+            const body = {};
+            
+            const fields = [
+                'updateYears', 'updateProperties', 'updateClients', 'updateAwards',
+                'updateDemo1', 'updateDemo2'
+            ];
+            const labels = ['updateDemo1Label', 'updateDemo2Label'];
+            
+            fields.forEach(field => {
+                const value = document.getElementById(field).value;
+                if (value) {
+                    const key = field.replace('update', '').toLowerCase();
+                    if (key === 'years') body.yearsInBusiness = parseInt(value);
+                    else if (key === 'properties') body.propertiesSold = parseInt(value);
+                    else if (key === 'clients') body.happyClients = parseInt(value);
+                    else if (key === 'awards') body.awardsWon = parseInt(value);
+                    else if (key === 'demo1') body.demoField1 = parseInt(value);
+                    else if (key === 'demo2') body.demoField2 = parseInt(value);
+                }
+            });
+            
+            labels.forEach(field => {
+                const value = document.getElementById(field).value;
+                if (value) {
+                    if (field === 'updateDemo1Label') body.demoField1Label = value;
+                    else if (field === 'updateDemo2Label') body.demoField2Label = value;
+                }
+            });
+
+            if (Object.keys(body).length === 0) {
+                alert('Please enter at least one field to update');
+                return;
+            }
+
+            const response = await makeRequest(`${API_BASE}/active`, 'PUT', body);
+            displayResponse('updateActiveResponse', response);
+            
+            if (response.ok) {
+                loadCurrentStats();
+            }
+        }
+
+        async function updateStatsById() {
+            const id = document.getElementById('updateId').value;
+            if (!id) {
+                alert('Please enter Counter Stats ID');
+                return;
+            }
+
+            const body = {};
+            const fields = [
+                { id: 'updateByIdYears', key: 'yearsInBusiness' },
+                { id: 'updateByIdProperties', key: 'propertiesSold' },
+                { id: 'updateByIdClients', key: 'happyClients' },
+                { id: 'updateByIdAwards', key: 'awardsWon' }
+            ];
+            
+            fields.forEach(field => {
+                const value = document.getElementById(field.id).value;
+                if (value) {
+                    body[field.key] = parseInt(value);
+                }
+            });
+
+            if (Object.keys(body).length === 0) {
+                alert('Please enter at least one field to update');
+                return;
+            }
+
+            const response = await makeRequest(`${API_BASE}/${id}`, 'PUT', body);
+            displayResponse('updateByIdResponse', response);
+            
+            if (response.ok) {
+                loadCurrentStats();
+            }
+        }
+
+        async function deleteStatsById() {
+            const id = document.getElementById('deleteId').value;
+            if (!id) {
+                alert('Please enter Counter Stats ID');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete counter stats with ID ${id}?`)) {
+                return;
+            }
+
+            const response = await makeRequest(`${API_BASE}/${id}`, 'DELETE');
+            displayResponse('deleteResponse', response);
+            
+            if (response.ok) {
+                loadCurrentStats();
+            }
+        }
+
+        async function resetStats() {
+            if (!confirm('Are you sure you want to reset counter stats to default values? This will deactivate all existing records!')) {
+                return;
+            }
+
+            const response = await makeRequest(`${API_BASE}/reset?confirm=true`, 'POST');
+            displayResponse('resetResponse', response);
+            
+            if (response.ok) {
+                loadCurrentStats();
+            }
+        }
+    </script>
+</body>
+</html>
