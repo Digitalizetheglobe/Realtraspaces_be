@@ -42,7 +42,7 @@ const PropertyListing = sequelize.define('PropertyListing', {
   },
   price: {
     type: DataTypes.DECIMAL(15, 2),
-    allowNull: true
+    allowNull: false
   },
   contactName: {
     type: DataTypes.STRING,
@@ -66,10 +66,11 @@ const PropertyListing = sequelize.define('PropertyListing', {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  imageUrl: {
-    type: DataTypes.STRING,
+  images: {
+    type: DataTypes.JSON,
     allowNull: true,
-    field: 'image_url'
+    defaultValue: [],
+    comment: 'Array of image filenames stored locally'
   },
   status: {
     type: DataTypes.ENUM('pending', 'approved', 'rejected', 'active', 'inactive'),

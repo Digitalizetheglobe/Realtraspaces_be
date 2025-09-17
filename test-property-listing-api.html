@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Listing API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .endpoint {
+            background: #e8f4fd;
+            padding: 15px;
+            border-left: 4px solid #007acc;
+            margin-bottom: 15px;
+        }
+        .method {
+            font-weight: bold;
+            color: #007acc;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        .response {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            border-left: 4px solid #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-left: 4px solid #dc3545;
+            background: #f8d7da;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+        small {
+            font-size: 11px;
+            margin-top: 5px;
+            display: block;
+        }
+        .json-examples {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .image-preview {
+            position: relative;
+            display: inline-block;
+            margin: 5px;
+        }
+        .image-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+        }
+        .image-preview .remove-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-preview .remove-btn:hover {
+            background: #c82333;
+        }
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #007acc;
+            background: #e8f4fd;
+        }
+        .upload-area.dragover {
+            border-color: #007acc;
+            background: #e8f4fd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Property Listing API Test Suite</h1>
+    
+    <div class="container">
+        <h2>Base Configuration</h2>
+        <div class="form-group">
+            <label>API Base URL:</label>
+            <input type="text" id="baseUrl" value="http://localhost:3000/api/property-listings">
+        </div>
+    </div>
+
+    <!-- CREATE PROPERTY LISTING -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">POST</span> /api/property-listings/create
+        </div>
+        
+        <div class="json-examples">
+            <h4>📝 Load Test Data:</h4>
+            <button onclick="loadCreateExample(1)">Office Space</button>
+            <button onclick="loadCreateExample(2)">Retail Shop</button>
+            <button onclick="loadCreateExample(3)">Coworking</button>
+            <button onclick="loadCreateExample(4)">Warehouse</button>
+            <button onclick="loadCreateExample(5)">Land</button>
+            <button onclick="loadCreateExample(6)">Preleased</button>
+            <button onclick="clearCreateForm()">Clear Form</button>
+        </div>
+
+        <h4>Property Details Form:</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-group">
+                <label>Property Name:</label>
+                <input type="text" id="createPropertyName" placeholder="Tech Tower Business Center">
+            </div>
+            <div class="form-group">
+                <label>Location:</label>
+                <input type="text" id="createLocation" placeholder="Sector 18, Gurgaon">
+            </div>
+             <div class="form-group">
+                 <label>Property Type:</label>
+                 <select id="createPropertyType">
+                     <option value="">Select Property Type</option>
+                     <option value="Office">Office</option>
+                     <option value="Retail">Retail</option>
+                     <option value="Coworking">Coworking</option>
+                     <option value="Industrial or warehouse">Industrial or warehouse</option>
+                     <option value="Land">Land</option>
+                     <option value="Others">Others</option>
+                 </select>
+             </div>
+             <div class="form-group">
+                 <label>Transaction Type:</label>
+                 <select id="createTransactionType">
+                     <option value="">Select Transaction Type</option>
+                     <option value="Lease">Lease</option>
+                     <option value="Sale">Sale</option>
+                     <option value="BOTH">BOTH</option>
+                     <option value="Preleased">Preleased</option>
+                 </select>
+             </div>
+             <div class="form-group">
+                 <label>Area Carpet:</label>
+                 <input type="text" id="createAreaCarpet" placeholder="3200 sq ft">
+             </div>
+             <div class="form-group">
+                 <label>Area Builtup:</label>
+                 <input type="text" id="createAreaBuiltup" placeholder="4000 sq ft">
+             </div>
+             <div class="form-group">
+                 <label>Rent (₹):</label>
+                 <input type="number" id="createRent" placeholder="180000" step="0.01">
+             </div>
+             <div class="form-group">
+                 <label>Price (₹):</label>
+                 <input type="number" id="createPrice" placeholder="12000000" step="0.01">
+             </div>
+             <div class="form-group">
+                 <label>Contact Name:</label>
+                 <input type="text" id="createContactName" placeholder="Rahul Mehta">
+             </div>
+             <div class="form-group">
+                 <label>Contact Number:</label>
+                 <input type="tel" id="createContactNumber" placeholder="+91-9988776655">
+             </div>
+             <div class="form-group" style="grid-column: span 2;">
+                 <label>Email Address:</label>
+                 <input type="email" id="createEmailAddress" placeholder="rahul.mehta@techproperties.com">
+             </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Description:</label>
+                <textarea id="createDescription" rows="3" placeholder="Premium office space with sea view, fully furnished with modern amenities..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Property Images:</label>
+                <div class="upload-area" onclick="document.getElementById('createImages').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                    <p>📁 Click to select images or drag & drop here</p>
+                    <small>Supports JPG, PNG, WebP files</small>
+                </div>
+                <input type="file" id="createImages" multiple accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
+                <div id="imagePreview" style="margin-top: 15px;"></div>
+                <div id="imageList" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
+            </div>
+        </div>
+        <br>
+        <button onclick="testCreate()">🚀 Test Create</button>
+        <div id="createResponse" class="response"></div>
+    </div>
+
+    <!-- GET ALL PROPERTY LISTINGS -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">GET</span> /api/property-listings/all
+        </div>
+        
+        <div class="form-group">
+            <label>Query Parameters (optional):</label>
+            <input type="text" id="getAllParams" placeholder="page=1&limit=10&status=approved&propertyType=Office&search=gurgaon">
+        </div>
+        
+        <button onclick="testGetAll()">📋 Test Get All</button>
+        <button onclick="testGetAllWithFilters()">🔍 Test with Filters</button>
+        <div id="getAllResponse" class="response"></div>
+    </div>
+
+    <!-- GET PROPERTY BY ID -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">GET</span> /api/property-listings/:id
+        </div>
+        
+        <div class="form-group">
+            <label>Property ID:</label>
+            <input type="number" id="getById" placeholder="1">
+        </div>
+        
+        <button onclick="testGetById()">🔍 Test Get By ID</button>
+        <div id="getByIdResponse" class="response"></div>
+    </div>
+
+    <!-- UPDATE PROPERTY LISTING -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">PUT</span> /api/property-listings/:id
+        </div>
+        
+        <div class="form-group">
+            <label>Property ID to Update:</label>
+            <input type="number" id="updateId" placeholder="1">
+        </div>
+
+        <div class="json-examples">
+            <h4>📝 Update Examples:</h4>
+            <button onclick="loadUpdateExample(1)">Update Price</button>
+            <button onclick="loadUpdateExample(2)">Add Images</button>
+            <button onclick="loadUpdateExample(3)">Update Contact</button>
+        </div>
+
+        <h4>Update Data:</h4>
+        <textarea id="updateBody">{
+  "rent": 200000.00,
+  "description": "Updated: Premium office space with additional amenities and parking",
+  "images": [
+    "property-test-001-exterior-updated.jpg",
+    "property-test-002-lobby-renovated.jpg",
+    "property-test-003-office-floor-new.jpg"
+  ]
+}</textarea>
+        <br>
+        <button onclick="testUpdate()">✏️ Test Update</button>
+        <div id="updateResponse" class="response"></div>
+    </div>
+
+    <!-- UPDATE STATUS -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">PATCH</span> /api/property-listings/:id/status
+        </div>
+        
+        <div class="form-group">
+            <label>Property ID:</label>
+            <input type="number" id="statusId" placeholder="1">
+        </div>
+        
+        <div class="form-group">
+            <label>New Status:</label>
+            <select id="newStatus">
+                <option value="pending">pending</option>
+                <option value="approved">approved</option>
+                <option value="rejected">rejected</option>
+                <option value="active">active</option>
+                <option value="inactive">inactive</option>
+            </select>
+        </div>
+        
+        <button onclick="testUpdateStatus()">🔄 Test Update Status</button>
+        <div id="statusResponse" class="response"></div>
+    </div>
+
+    <!-- GET BY STATUS -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">GET</span> /api/property-listings/status/:status
+        </div>
+        
+        <div class="form-group">
+            <label>Status:</label>
+            <select id="getByStatus">
+                <option value="pending">pending</option>
+                <option value="approved">approved</option>
+                <option value="rejected">rejected</option>
+                <option value="active">active</option>
+                <option value="inactive">inactive</option>
+            </select>
+        </div>
+        
+        <button onclick="testGetByStatus()">📊 Test Get By Status</button>
+        <div id="getByStatusResponse" class="response"></div>
+    </div>
+
+    <!-- DELETE PROPERTY -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">DELETE</span> /api/property-listings/:id
+        </div>
+        
+        <div class="form-group">
+            <label>Property ID to Delete:</label>
+            <input type="number" id="deleteId" placeholder="1">
+        </div>
+        
+        <button onclick="testDelete()" style="background: #dc3545;">🗑️ Test Delete</button>
+        <div id="deleteResponse" class="response"></div>
+    </div>
+
+    <!-- DELETE ALL -->
+    <div class="container">
+        <div class="endpoint">
+            <span class="method">DELETE</span> /api/property-listings/delete-all?confirm=true
+        </div>
+        
+        <button onclick="testDeleteAll()" style="background: #dc3545;">⚠️ Test Delete All (Dangerous!)</button>
+        <div id="deleteAllResponse" class="response"></div>
+    </div>
+
+    <script>
+        const baseUrlInput = document.getElementById('baseUrl');
+        let selectedFiles = []; // Store selected files globally
+
+        // Create property examples
+        const createExamples = {
+            1: {
+                "propertyName": "Tech Tower Business Center",
+                "location": "Sector 18, Gurgaon",
+                "propertyType": "Office",
+                "transactionType": "Lease",
+                "areaCarpet": "3200 sq ft",
+                "areaBuiltup": "4000 sq ft",
+                "rent": 180000.00,
+                "price": null,
+                "contactName": "Rahul Mehta",
+                "contactNumber": "+91-9988776655",
+                "emailAddress": "rahul.mehta@techproperties.com",
+                "description": "Premium office space with sea view, fully furnished with modern amenities including high-speed internet, conference rooms, and dedicated parking.",
+                "images": [
+                    "property-test-001-exterior.jpg",
+                    "property-test-002-lobby.jpg",
+                    "property-test-003-office-floor.jpg",
+                    "property-test-004-conference-room.jpg",
+                    "property-test-005-pantry.jpg"
+                ]
+            },
+            2: {
+                "propertyName": "Street Side Retail Shop",
+                "location": "Khan Market, New Delhi",
+                "propertyType": "Retail",
+                "transactionType": "Sale",
+                "areaCarpet": "600 sq ft",
+                "areaBuiltup": "750 sq ft",
+                "rent": null,
+                "price": 4500000.00,
+                "contactName": "Sunita Kapoor",
+                "contactNumber": "+91-8877665544",
+                "emailAddress": "sunita.kapoor@retailspaces.in",
+                "description": "Prime retail location with high foot traffic, perfect for boutique or electronics store.",
+                "images": [
+                    "property-test-006-storefront.jpg",
+                    "property-test-007-interior.jpg"
+                ]
+            },
+            3: {
+                "propertyName": "Creative Workspace Hub",
+                "location": "Koramangala, Bangalore",
+                "propertyType": "Coworking",
+                "transactionType": "BOTH",
+                "areaCarpet": "8000 sq ft",
+                "areaBuiltup": "10000 sq ft",
+                "rent": 350000.00,
+                "price": 15000000.00,
+                "contactName": "Arjun Reddy",
+                "contactNumber": "+91-7766554433",
+                "emailAddress": "arjun.reddy@creativespaces.com",
+                "description": "State-of-the-art coworking facility with 200+ desks, multiple meeting rooms, event space, rooftop cafe, and wellness area.",
+                "images": [
+                    "property-test-008-main-workspace.jpg",
+                    "property-test-009-meeting-room-1.jpg",
+                    "property-test-010-meeting-room-2.jpg",
+                    "property-test-011-phone-booths.jpg",
+                    "property-test-012-reception.jpg",
+                    "property-test-013-cafe-area.jpg"
+                ]
+            },
+            4: {
+                "propertyName": "Industrial Storage Facility",
+                "location": "Manesar Industrial Area, Haryana",
+                "propertyType": "Industrial or warehouse",
+                "transactionType": "Lease",
+                "areaCarpet": "25000 sq ft",
+                "areaBuiltup": "30000 sq ft",
+                "rent": 750000.00,
+                "price": null,
+                "contactName": "Manoj Kumar",
+                "contactNumber": "+91-6655443322",
+                "emailAddress": "manoj.kumar@industrialspaces.co.in",
+                "description": "Large warehouse with 40 ft height, multiple loading docks, office space, and 24/7 security.",
+                "images": []
+            },
+            5: {
+                "propertyName": "Commercial Development Land",
+                "location": "NH-8, Gurgaon",
+                "propertyType": "Land",
+                "transactionType": "Sale",
+                "areaCarpet": "50000 sq ft",
+                "areaBuiltup": "50000 sq ft",
+                "rent": null,
+                "price": 125000000.00,
+                "contactName": "Deepak Sharma",
+                "contactNumber": "+91-5544332211",
+                "emailAddress": "deepak.sharma@landdeals.net",
+                "description": "Commercial land with highway frontage, ideal for mall, hotel, or commercial complex development.",
+                "images": [
+                    "property-test-018-land-aerial-view.jpg"
+                ]
+            },
+            6: {
+                "propertyName": "Corporate Office Complex",
+                "location": "Bandra Kurla Complex, Mumbai",
+                "propertyType": "Office",
+                "transactionType": "Preleased",
+                "areaCarpet": "12000 sq ft",
+                "areaBuiltup": "15000 sq ft",
+                "rent": null,
+                "price": 45000000.00,
+                "contactName": "Kavita Joshi",
+                "contactNumber": "+91-9876543210",
+                "emailAddress": "kavita.joshi@premiumproperties.com",
+                "description": "Preleased to Fortune 500 company with 15-year lease agreement, 8% assured returns with annual escalation.",
+                "images": [
+                    "property-test-019-building-exterior.jpg",
+                    "property-test-020-lobby-entrance.jpg",
+                    "property-test-021-elevator-area.jpg",
+                    "property-test-022-office-view.jpg"
+                ]
+            }
+        };
+
+        // Update examples
+        const updateExamples = {
+            1: {
+                "rent": 220000.00,
+                "price": 12000000.00,
+                "description": "Updated: Premium office space with additional amenities, renovated interiors, and expanded parking facility."
+            },
+            2: {
+                "images": [
+                    "property-updated-001-new-exterior.jpg",
+                    "property-updated-002-renovated-lobby.jpg",
+                    "property-updated-003-modern-office-space.jpg",
+                    "property-updated-004-new-conference-room.jpg"
+                ]
+            },
+            3: {
+                "contactName": "Priya Sharma",
+                "contactNumber": "+91-9999888877",
+                "emailAddress": "priya.sharma@newcontact.com",
+                "location": "Updated Location: Sector 18, Cyber Hub, Gurgaon"
+            }
+        };
+
+        function loadCreateExample(num) {
+            const example = createExamples[num];
+            
+            document.getElementById('createPropertyName').value = example.propertyName || '';
+            document.getElementById('createLocation').value = example.location || '';
+            document.getElementById('createPropertyType').value = example.propertyType || '';
+            document.getElementById('createTransactionType').value = example.transactionType || '';
+            document.getElementById('createAreaCarpet').value = example.areaCarpet || '';
+            document.getElementById('createAreaBuiltup').value = example.areaBuiltup || '';
+            document.getElementById('createRent').value = example.rent || '';
+            document.getElementById('createPrice').value = example.price || '';
+            document.getElementById('createContactName').value = example.contactName || '';
+            document.getElementById('createContactNumber').value = example.contactNumber || '';
+            document.getElementById('createEmailAddress').value = example.emailAddress || '';
+            document.getElementById('createDescription').value = example.description || '';
+            
+            // Clear any existing images when loading examples
+            clearImages();
+        }
+
+        function clearCreateForm() {
+            document.getElementById('createPropertyName').value = '';
+            document.getElementById('createLocation').value = '';
+            document.getElementById('createPropertyType').value = '';
+            document.getElementById('createTransactionType').value = '';
+            document.getElementById('createAreaCarpet').value = '';
+            document.getElementById('createAreaBuiltup').value = '';
+            document.getElementById('createRent').value = '';
+            document.getElementById('createPrice').value = '';
+            document.getElementById('createContactName').value = '';
+            document.getElementById('createContactNumber').value = '';
+            document.getElementById('createEmailAddress').value = '';
+            document.getElementById('createDescription').value = '';
+            clearImages();
+        }
+
+        // Image handling functions
+        function handleImageUpload(event) {
+            const files = Array.from(event.target.files);
+            addFiles(files);
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+            
+            const files = Array.from(event.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+            addFiles(files);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.target.classList.remove('dragover');
+        }
+
+        function addFiles(files) {
+            files.forEach(file => {
+                // Check if file already exists
+                const exists = selectedFiles.some(existingFile => 
+                    existingFile.name === file.name && existingFile.size === file.size
+                );
+                
+                if (!exists) {
+                    selectedFiles.push(file);
+                }
+            });
+            
+            updateImagePreview();
+            updateImageList();
+        }
+
+        function removeImage(index) {
+            selectedFiles.splice(index, 1);
+            updateImagePreview();
+            updateImageList();
+        }
+
+        function clearImages() {
+            selectedFiles = [];
+            document.getElementById('createImages').value = '';
+            updateImagePreview();
+            updateImageList();
+        }
+
+        function updateImagePreview() {
+            const previewDiv = document.getElementById('imagePreview');
+            previewDiv.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'image-preview';
+                    
+                    imageDiv.innerHTML = `
+                        <img src="${e.target.result}" alt="${file.name}" title="${file.name}">
+                        <button class="remove-btn" onclick="removeImage(${index})" title="Remove image">×</button>
+                    `;
+                    
+                    previewDiv.appendChild(imageDiv);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updateImageList() {
+            const listDiv = document.getElementById('imageList');
+            if (selectedFiles.length === 0) {
+                listDiv.innerHTML = '';
+                return;
+            }
+
+            const fileNames = selectedFiles.map(file => `• ${file.name} (${formatFileSize(file.size)})`).join('<br>');
+            listDiv.innerHTML = `<strong>Selected files (${selectedFiles.length}):</strong><br>${fileNames}`;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Simulate file upload and return filenames (in real app, this would upload to server)
+        async function uploadImages() {
+            if (selectedFiles.length === 0) return [];
+
+            // Simulate upload delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Generate filenames based on current timestamp and original names
+            const timestamp = Date.now();
+            return selectedFiles.map((file, index) => {
+                const extension = file.name.split('.').pop();
+                return `property-${timestamp}-${index + 1}.${extension}`;
+            });
+        }
+
+        function loadUpdateExample(num) {
+            document.getElementById('updateBody').value = JSON.stringify(updateExamples[num], null, 2);
+        }
+
+        async function makeRequest(method, endpoint, body = null) {
+            const url = baseUrlInput.value + endpoint;
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                return {
+                    status: response.status,
+                    data: data,
+                    success: response.ok
+                };
+            } catch (error) {
+                return {
+                    status: 0,
+                    data: { error: error.message },
+                    success: false
+                };
+            }
+        }
+
+        function displayResponse(elementId, response) {
+            const element = document.getElementById(elementId);
+            element.className = 'response ' + (response.success ? 'success' : 'error');
+            element.textContent = `Status: ${response.status}\n\n${JSON.stringify(response.data, null, 2)}`;
+        }
+
+        async function testCreate() {
+            // Show loading state
+            const createButton = document.querySelector('button[onclick="testCreate()"]');
+            const originalText = createButton.textContent;
+            createButton.textContent = '⏳ Processing...';
+            createButton.disabled = true;
+
+            try {
+                // Collect form data - all fields are optional and can be null/empty
+                const formData = {
+                    propertyName: document.getElementById('createPropertyName').value || null,
+                    location: document.getElementById('createLocation').value || null,
+                    propertyType: document.getElementById('createPropertyType').value || null,
+                    transactionType: document.getElementById('createTransactionType').value || null,
+                    areaCarpet: document.getElementById('createAreaCarpet').value || null,
+                    areaBuiltup: document.getElementById('createAreaBuiltup').value || null,
+                    rent: document.getElementById('createRent').value ? parseFloat(document.getElementById('createRent').value) : null,
+                    price: document.getElementById('createPrice').value ? parseFloat(document.getElementById('createPrice').value) : null,
+                    contactName: document.getElementById('createContactName').value || null,
+                    contactNumber: document.getElementById('createContactNumber').value || null,
+                    emailAddress: document.getElementById('createEmailAddress').value || null,
+                    description: document.getElementById('createDescription').value || null
+                };
+
+                // No client-side validation - all fields are optional
+
+                // Handle image upload
+                if (selectedFiles.length > 0) {
+                    createButton.textContent = '📤 Uploading images...';
+                    formData.images = await uploadImages();
+                } else {
+                    formData.images = [];
+                }
+
+                // Send API request
+                createButton.textContent = '🚀 Creating property...';
+                const response = await makeRequest('POST', '/create', formData);
+                displayResponse('createResponse', response);
+
+                // Show success message with image info
+                if (response.success && selectedFiles.length > 0) {
+                    const imageInfo = `\n\n📸 Uploaded ${selectedFiles.length} image(s):\n${formData.images.map(img => '• ' + img).join('\n')}`;
+                    document.getElementById('createResponse').textContent += imageInfo;
+                }
+
+            } catch (error) {
+                displayResponse('createResponse', {
+                    success: false,
+                    status: 0,
+                    data: { error: error.message }
+                });
+            } finally {
+                // Restore button state
+                createButton.textContent = originalText;
+                createButton.disabled = false;
+            }
+        }
+
+        async function testGetAll() {
+            const response = await makeRequest('GET', '/all');
+            displayResponse('getAllResponse', response);
+        }
+
+        async function testGetAllWithFilters() {
+            const params = document.getElementById('getAllParams').value;
+            const endpoint = params ? `/all?${params}` : '/all?page=1&limit=5&status=approved';
+            const response = await makeRequest('GET', endpoint);
+            displayResponse('getAllResponse', response);
+        }
+
+        async function testGetById() {
+            const id = document.getElementById('getById').value;
+            if (!id) {
+                alert('Please enter a Property ID');
+                return;
+            }
+            const response = await makeRequest('GET', `/${id}`);
+            displayResponse('getByIdResponse', response);
+        }
+
+        async function testUpdate() {
+            const id = document.getElementById('updateId').value;
+            if (!id) {
+                alert('Please enter a Property ID');
+                return;
+            }
+            const body = JSON.parse(document.getElementById('updateBody').value);
+            const response = await makeRequest('PUT', `/${id}`, body);
+            displayResponse('updateResponse', response);
+        }
+
+        async function testUpdateStatus() {
+            const id = document.getElementById('statusId').value;
+            const status = document.getElementById('newStatus').value;
+            if (!id) {
+                alert('Please enter a Property ID');
+                return;
+            }
+            const response = await makeRequest('PATCH', `/${id}/status`, { status });
+            displayResponse('statusResponse', response);
+        }
+
+        async function testGetByStatus() {
+            const status = document.getElementById('getByStatus').value;
+            const response = await makeRequest('GET', `/status/${status}`);
+            displayResponse('getByStatusResponse', response);
+        }
+
+        async function testDelete() {
+            const id = document.getElementById('deleteId').value;
+            if (!id) {
+                alert('Please enter a Property ID');
+                return;
+            }
+            if (!confirm('Are you sure you want to delete this property listing?')) {
+                return;
+            }
+            const response = await makeRequest('DELETE', `/${id}`);
+            displayResponse('deleteResponse', response);
+        }
+
+        async function testDeleteAll() {
+            if (!confirm('⚠️ WARNING: This will delete ALL property listings! Are you absolutely sure?')) {
+                return;
+            }
+            const response = await makeRequest('DELETE', '/delete-all?confirm=true');
+            displayResponse('deleteAllResponse', response);
+        }
+
+        // Load first example on page load
+        window.addEventListener('load', function() {
+            loadCreateExample(1);
+        });
+    </script>
+</body>
+</html>

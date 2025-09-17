@@ -17,7 +17,7 @@ exports.createPropertyListing = async (req, res) => {
       contactNumber,
       emailAddress,
       description,
-      imageUrl
+      images
     } = req.body;
 
     // Validate required fields
@@ -65,7 +65,7 @@ exports.createPropertyListing = async (req, res) => {
       contactNumber,
       emailAddress,
       description,
-      imageUrl
+      images
     });
 
     res.status(201).json({
