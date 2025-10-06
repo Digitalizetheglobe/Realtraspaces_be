@@ -42,7 +42,7 @@ const PropertyListing = sequelize.define('PropertyListing', {
   },
   price: {
     type: DataTypes.DECIMAL(15, 2),
-    allowNull: false
+    allowNull: true
   },
   contactName: {
     type: DataTypes.STRING,

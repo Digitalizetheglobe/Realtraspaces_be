@@ -30,7 +30,7 @@ Creates a new property listing.
   "contactNumber": "+91 9876543210",
   "emailAddress": "john@example.com",
   "description": "Premium office space in prime location",
-  "imageUrl": "https://example.com/image.jpg"
+  "images": ["image1.jpg", "image2.jpg"]
 }
 ```
 
@@ -53,7 +53,7 @@ Creates a new property listing.
     "contactNumber": "+91 9876543210",
     "emailAddress": "john@example.com",
     "description": "Premium office space in prime location",
-    "imageUrl": "https://example.com/image.jpg",
+    "images": ["image1.jpg", "image2.jpg"],
     "status": "pending",
     "isActive": true,
     "createdAt": "2025-01-15T10:00:00.000Z",
@@ -102,7 +102,7 @@ GET /api/property-listings/all?page=1&limit=5&status=approved&propertyType=Offic
         "contactNumber": "+91 9876543210",
         "emailAddress": "john@example.com",
         "description": "Premium office space in prime location",
-        "imageUrl": "https://example.com/image.jpg",
+        "images": ["image1.jpg", "image2.jpg"],
         "status": "approved",
         "isActive": true,
         "createdAt": "2025-01-15T10:00:00.000Z",
@@ -148,7 +148,7 @@ GET /api/property-listings/1
     "contactNumber": "+91 9876543210",
     "emailAddress": "john@example.com",
     "description": "Premium office space in prime location",
-    "imageUrl": "https://example.com/image.jpg",
+    "images": ["image1.jpg", "image2.jpg"],
     "status": "pending",
     "isActive": true,
     "createdAt": "2025-01-15T10:00:00.000Z",
@@ -190,7 +190,7 @@ Updates an existing property listing.
     "contactNumber": "+91 9876543210",
     "emailAddress": "john@example.com",
     "description": "Updated description",
-    "imageUrl": "https://example.com/image.jpg",
+    "images": ["image1.jpg", "image2.jpg"],
     "status": "pending",
     "isActive": true,
     "createdAt": "2025-01-15T10:00:00.000Z",
@@ -309,7 +309,7 @@ Updates the status of a property listing (admin function).
 | contactNumber | String | Yes | Contact phone number |
 | emailAddress | String | Yes | Contact email |
 | description | Text | No | Property description |
-| imageUrl | String | No | Property image URL |
+| images | Array | No | Property images array |
 | status | Enum | Auto | pending, approved, rejected, active, inactive |
 | isActive | Boolean | Auto | Soft delete flag |
 | createdAt | DateTime | Auto | Creation timestamp |

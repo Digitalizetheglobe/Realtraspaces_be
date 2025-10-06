@@ -63,6 +63,13 @@ if (!fs.existsSync(resumeDir)) {
   console.log('Created resume directory:', resumeDir);
 }
 
+// Ensure propertyImages directory exists
+const propertyImagesDir = path.join(publicPath, 'propertyImages');
+if (!fs.existsSync(propertyImagesDir)) {
+  fs.mkdirSync(propertyImagesDir, { recursive: true });
+  console.log('Created propertyImages directory:', propertyImagesDir);
+}
+
 app.use(express.static(publicPath));
 
 // Serve team images from both /team and /uploads/team paths
@@ -78,6 +85,9 @@ app.use('/awardsimages', express.static(path.join(publicPath, 'awardsimages')));
 
 // Serve resume/CV files
 app.use('/resume', express.static(path.join(publicPath, 'resume')));
+
+// Serve property images
+app.use('/propertyImages', express.static(path.join(publicPath, 'propertyImages')));
 
 // Test endpoint for blog images
 app.get('/test-blog-images', (req, res) => {

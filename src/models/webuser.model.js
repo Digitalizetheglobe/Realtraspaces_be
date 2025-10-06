@@ -16,13 +16,11 @@ const Webuser = sequelize.define('Webuser', {
     mobileNumber: {
         type: DataTypes.STRING(15),
         allowNull: false,
-        unique: true,
         field: 'mobile_number'
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
             isEmail: true
         }

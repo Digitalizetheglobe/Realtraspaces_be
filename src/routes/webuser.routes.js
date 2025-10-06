@@ -5,9 +5,11 @@ const webuserController = require('../controllers/webuser.controller');
 const savedPropertyController = require('../controllers/savedProperty.controller');
 const propertyComparisonController = require('../controllers/propertyComparison.controller');
 
-// Public routes
-router.post('/register', webuserController.register);
-router.post('/login', webuserController.login);
+// Public routes - OTP based authentication
+router.post('/send-registration-otp', webuserController.sendRegistrationOtp);
+router.post('/verify-registration-otp', webuserController.verifyRegistrationOtp);
+router.post('/send-login-otp', webuserController.sendLoginOtp);
+router.post('/verify-login-otp', webuserController.verifyLoginOtp);
 
 // Protected routes
 router.get('/profile', protect, webuserController.getUserProfile);

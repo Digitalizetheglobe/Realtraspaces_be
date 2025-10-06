@@ -54,10 +54,6 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
       }
     });
-
-    // Add indexes
-    await queryInterface.addIndex('webusers', ['email'], { unique: true });
-    await queryInterface.addIndex('webusers', ['mobile_number'], { unique: true });
   },
 
   async down(queryInterface, Sequelize) {
