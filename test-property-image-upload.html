@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Listing Image Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        #imagePreview {
+            margin-top: 10px;
+        }
+        #imagePreview img {
+            max-width: 100px;
+            max-height: 100px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Property Listing Image Upload Test</h1>
+    
+    <h2>Create Property Listing with Images</h2>
+    <form id="createPropertyForm">
+        <div class="form-group">
+            <label for="propertyName">Property Name:</label>
+            <input type="text" id="propertyName" name="propertyName" placeholder="Enter property name">
+        </div>
+        
+        <div class="form-group">
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" placeholder="Enter location">
+        </div>
+        
+        <div class="form-group">
+            <label for="propertyType">Property Type:</label>
+            <select id="propertyType" name="propertyType" required>
+                <option value="">Select property type</option>
+                <option value="Office">Office</option>
+                <option value="Retail">Retail</option>
+                <option value="Coworking">Coworking</option>
+                <option value="Industrial or warehouse">Industrial or warehouse</option>
+                <option value="Land">Land</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="transactionType">Transaction Type:</label>
+            <select id="transactionType" name="transactionType" required>
+                <option value="">Select transaction type</option>
+                <option value="Lease">Lease</option>
+                <option value="Sale">Sale</option>
+                <option value="BOTH">BOTH</option>
+                <option value="Preleased">Preleased</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="areaCarpet">Area Carpet (sq ft):</label>
+            <input type="text" id="areaCarpet" name="areaCarpet" placeholder="e.g., 1000" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="areaBuiltup">Area Builtup (sq ft):</label>
+            <input type="text" id="areaBuiltup" name="areaBuiltup" placeholder="e.g., 1200" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="rent">Rent (₹):</label>
+            <input type="number" id="rent" name="rent" placeholder="Enter rent amount">
+        </div>
+        
+        <div class="form-group">
+            <label for="price">Price (₹):</label>
+            <input type="number" id="price" name="price" placeholder="Enter price amount">
+        </div>
+        
+        <div class="form-group">
+            <label for="contactName">Contact Name:</label>
+            <input type="text" id="contactName" name="contactName" placeholder="Enter contact name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="contactNumber">Contact Number:</label>
+            <input type="text" id="contactNumber" name="contactNumber" placeholder="Enter contact number" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="emailAddress">Email Address:</label>
+            <input type="email" id="emailAddress" name="emailAddress" placeholder="Enter email address" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" placeholder="Enter property description"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="images">Property Images:</label>
+            <input type="file" id="images" name="images" multiple accept="image/*">
+            <div id="imagePreview"></div>
+        </div>
+        
+        <button type="submit">Create Property Listing</button>
+    </form>
+    
+    <div id="response"></div>
+
+    <h2>Upload Additional Images to Existing Property</h2>
+    <form id="uploadAdditionalForm">
+        <div class="form-group">
+            <label for="propertyId">Property ID:</label>
+            <input type="number" id="propertyId" name="propertyId" placeholder="Enter property ID" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="additionalImages">Additional Images:</label>
+            <input type="file" id="additionalImages" name="images" multiple accept="image/*">
+        </div>
+        
+        <button type="submit">Upload Additional Images</button>
+    </form>
+    
+    <div id="additionalResponse"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api/property-listings';
+        
+        // Image preview functionality
+        document.getElementById('images').addEventListener('change', function(e) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            
+            Array.from(e.target.files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        preview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+        
+        // Create property listing form
+        document.getElementById('createPropertyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const form = e.target;
+            
+            // Add all form fields to FormData
+            const fields = ['propertyName', 'location', 'propertyType', 'transactionType', 
+                          'areaCarpet', 'areaBuiltup', 'rent', 'price', 'contactName', 
+                          'contactNumber', 'emailAddress', 'description'];
+            
+            fields.forEach(field => {
+                if (form[field].value) {
+                    formData.append(field, form[field].value);
+                }
+            });
+            
+            // Add images
+            const imageFiles = document.getElementById('images').files;
+            Array.from(imageFiles).forEach(file => {
+                formData.append('images', file);
+            });
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/create`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                const responseDiv = document.getElementById('response');
+                responseDiv.className = 'response ' + (response.ok ? 'success' : 'error');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                
+                if (response.ok) {
+                    form.reset();
+                    document.getElementById('imagePreview').innerHTML = '';
+                }
+                
+            } catch (error) {
+                const responseDiv = document.getElementById('response');
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Error: ' + error.message;
+            }
+        });
+        
+        // Upload additional images form
+        document.getElementById('uploadAdditionalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const propertyId = document.getElementById('propertyId').value;
+            const formData = new FormData();
+            
+            // Add images
+            const imageFiles = document.getElementById('additionalImages').files;
+            Array.from(imageFiles).forEach(file => {
+                formData.append('images', file);
+            });
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/${propertyId}/upload-images`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                const responseDiv = document.getElementById('additionalResponse');
+                responseDiv.className = 'response ' + (response.ok ? 'success' : 'error');
+                responseDiv.textContent = JSON.stringify(result, null, 2);
+                
+                if (response.ok) {
+                    document.getElementById('uploadAdditionalForm').reset();
+                }
+                
+            } catch (error) {
+                const responseDiv = document.getElementById('additionalResponse');
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

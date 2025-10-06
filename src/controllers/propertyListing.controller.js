@@ -16,9 +16,11 @@ exports.createPropertyListing = async (req, res) => {
       contactName,
       contactNumber,
       emailAddress,
-      description,
-      images
+      description
     } = req.body;
+
+    // Extract image filenames from uploaded files
+    const uploadedImages = req.files ? req.files.map(file => file.filename) : [];
 
     // Validate required fields
     if (!propertyType || !transactionType || !areaCarpet || !areaBuiltup || !contactName || !contactNumber || !emailAddress) {
@@ -65,7 +67,7 @@ exports.createPropertyListing = async (req, res) => {
       contactNumber,
       emailAddress,
       description,
-      images
+      images: uploadedImages
     });
 
     res.status(201).json({
@@ -183,6 +185,14 @@ exports.updatePropertyListing = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
+
+    // Extract image filenames from uploaded files if any
+    const uploadedImages = req.files ? req.files.map(file => file.filename) : [];
+    
+    // If new images were uploaded, add them to the update data
+    if (uploadedImages.length > 0) {
+      updateData.images = uploadedImages;
+    }
 
     const propertyListing = await PropertyListing.findOne({
       where: { id, isActive: true }
@@ -365,6 +375,56 @@ exports.updatePropertyListingStatus = async (req, res) => {
 
   } catch (error) {
     console.error('Error updating property listing status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+};
+
+// Upload additional images to an existing property listing
+exports.uploadAdditionalImages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const uploadedImages = req.files ? req.files.map(file => file.filename) : [];
+
+    if (uploadedImages.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No images uploaded'
+      });
+    }
+
+    const propertyListing = await PropertyListing.findOne({
+      where: { id, isActive: true }
+    });
+
+    if (!propertyListing) {
+      return res.status(404).json({
+        success: false,
+        message: 'Property listing not found'
+      });
+    }
+
+    // Get current images and add new ones
+    const currentImages = propertyListing.images || [];
+    const updatedImages = [...currentImages, ...uploadedImages];
+
+    await propertyListing.update({ images: updatedImages });
+
+    res.status(200).json({
+      success: true,
+      message: 'Additional images uploaded successfully',
+      data: {
+        propertyId: id,
+        uploadedImages,
+        totalImages: updatedImages.length
+      }
+    });
+
+  } catch (error) {
+    console.error('Error uploading additional images:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error',
