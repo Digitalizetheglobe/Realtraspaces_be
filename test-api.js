@@ -5,7 +5,7 @@ async function testTestimonialsAPI() {
     console.log('Testing testimonials API...');
     
     // Test local API
-    const localResponse = await axios.get('http://localhost:8000/api/testimonials');
+    const localResponse = await axios.get('https://api.realtraspaces.com/api/testimonials');
     console.log('✅ Local API Response:', localResponse.status);
     console.log('✅ Local API Data:', localResponse.data);
     

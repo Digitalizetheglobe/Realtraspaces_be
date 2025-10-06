@@ -38,12 +38,12 @@
     
     <h2>Old Image (should work):</h2>
     <div id="old-image-status" class="status">Loading...</div>
-    <img id="old-image" class="test-image" src="http://localhost:8000/blogImages/blog-1756101794399-987863174.jpg" 
+    <img id="old-image" class="test-image" src="https://api.realtraspaces.com/blogImages/blog-1756101794399-987863174.jpg" 
          alt="Old Image" onload="imageLoaded('old-image-status', true)" onerror="imageLoaded('old-image-status', false)">
     
     <h2>New Image (should work after fix):</h2>
     <div id="new-image-status" class="status">Loading...</div>
-    <img id="new-image" class="test-image" src="http://localhost:8000/blogImages/blog-1756102415079-444066052.jpg" 
+    <img id="new-image" class="test-image" src="https://api.realtraspaces.com/blogImages/blog-1756102415079-444066052.jpg" 
          alt="New Image" onload="imageLoaded('new-image-status', true)" onerror="imageLoaded('new-image-status', false)">
     
     <h2>Test Direct Access:</h2>
@@ -75,7 +75,7 @@
             
             for (const image of images) {
                 try {
-                    const response = await fetch(`http://localhost:8000/blogImages/${image}`, {
+                    const response = await fetch(`https://api.realtraspaces.com/blogImages/${image}`, {
                         method: 'HEAD'
                     });
                     

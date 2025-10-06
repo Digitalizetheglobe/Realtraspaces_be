@@ -2,7 +2,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 const path = require('path');
 
-const API_BASE_URL = 'http://localhost:8000/api/blogs';
+const API_BASE_URL = 'https://api.realtraspaces.com/api/blogs';
 
 // Test data for updating a blog
 const testBlogData = {
