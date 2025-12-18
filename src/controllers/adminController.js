@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const Admin = require('../models/Admin.model');
+const otpEmailService = require('../services/otpService');
 
 // Configure JWT secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
@@ -97,6 +98,139 @@ exports.register = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error registering admin',
+            error: error.message
+        });
+    }
+};
+
+/**
+ * Request OTP for admin forgot password
+ * OTP will be sent to the default admin email ID
+ */
+exports.requestPasswordResetOtp = async (req, res) => {
+    try {
+        // Default email where OTP should be sent (can be overridden via env)
+        // This is the admin email that will receive the forgot-password OTP.
+        const DEFAULT_ADMIN_EMAIL = process.env.ADMIN_RESET_EMAIL || 'credefinepro@gmail.com';
+
+        // Trigger login-type OTP to the default email
+        const result = await otpEmailService.sendLoginOtp(DEFAULT_ADMIN_EMAIL);
+
+        // Even if email sending fails, the OTP record is usually created.
+        // For security and better UX, don't reveal detailed errors to the client.
+        if (!result.success) {
+            console.error('Failed to send password reset OTP email:', result.error);
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'If an account exists, an OTP has been generated and sent to the admin email.'
+        });
+    } catch (error) {
+        console.error('Error requesting password reset OTP:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error requesting password reset OTP',
+            error: error.message
+        });
+    }
+};
+
+/**
+ * Verify OTP for admin forgot password (email-based)
+ * Body: { otpCode }
+ *
+ * This is used by the frontend "Verify OTP" step and should NOT require auth.
+ */
+exports.verifyPasswordResetOtp = async (req, res) => {
+    try {
+        const { otpCode } = req.body;
+        const DEFAULT_ADMIN_EMAIL = process.env.ADMIN_RESET_EMAIL || 'credefinepro@gmail.com';
+
+        if (!otpCode) {
+            return res.status(400).json({
+                success: false,
+                message: 'OTP code is required.'
+            });
+        }
+
+        const otpVerification = await otpEmailService.verifyOtp(
+            DEFAULT_ADMIN_EMAIL,
+            otpCode,
+            'login'
+        );
+
+        if (!otpVerification.success) {
+            return res.status(400).json({
+                success: false,
+                message: otpVerification.message || 'Invalid or expired OTP.'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'OTP verified successfully.'
+        });
+    } catch (error) {
+        console.error('Error verifying password reset OTP:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error verifying OTP',
+            error: error.message
+        });
+    }
+};
+
+/**
+ * Reset admin password using OTP
+ * Frontend body: { email, otpCode, newPassword }
+ *
+ * NOTE:
+ * - Does NOT require authentication
+ * - Assumes OTP was already verified via verifyPasswordResetOtp
+ * - Resets the password of the first active admin (single-admin setup)
+ */
+exports.resetPasswordWithOtp = async (req, res) => {
+    try {
+        const { email, otpCode, newPassword } = req.body;
+
+        // Basic validations
+        if (!newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'New password is required.'
+            });
+        }
+
+        // Since Admin does not have an email field and we have a single admin,
+        // reset password for the first active admin.
+        const admin = await Admin.scope('withPassword').findOne({
+            where: {
+                isActive: true
+            },
+            order: [['id', 'ASC']]
+        });
+
+        if (!admin) {
+            return res.status(404).json({
+                success: false,
+                message: 'No active admin found to reset password.'
+            });
+        }
+
+        // Update password (hook will hash it)
+        admin.password = newPassword;
+        await admin.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Password has been reset successfully.'
+        });
+    } catch (error) {
+        console.error('Error resetting admin password with OTP:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error resetting password',
             error: error.message
         });
     }

@@ -1,14 +1,14 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// Email configuration with environment variables
 const emailConfig = {
-    host: process.env.SMTP_HOST || 'smtp.zoho.com',
-    port: parseInt(process.env.SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === 'true',
+    // All values must come from environment variables to avoid hardcoding secrets
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 587,
+    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : false,
     auth: {
-        user: process.env.SMTP_USER || 'Info@realtraspaces.com',
-        pass: process.env.SMTP_PASS || 'Rahul@23121984' // Your Zoho Mail password
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
     },
     tls: {
         rejectUnauthorized: false
@@ -23,14 +23,14 @@ transporter.verify((error, success) => {
     if (error) {
         console.log('Email configuration error:', error.message);
         if (error.code === 'EAUTH') {
-            console.log('Zoho Mail authentication failed. Please check:');
-            console.log('1. Verify your Zoho Mail credentials');
-            console.log('2. Ensure SMTP is enabled in your Zoho Mail settings');
-            console.log('3. Check if your Zoho Mail account supports SMTP');
-            console.log('4. Update the SMTP_PASS with your correct Zoho password');
+            console.log('SMTP authentication failed. Please check:');
+            console.log('1. Verify your SMTP credentials (email + password/app password)');
+            console.log('2. Ensure SMTP is enabled in your email provider settings');
+            console.log('3. For Gmail, use an App Password (not your normal login password)');
+            console.log('4. Update SMTP_PASS with the correct password/app password');
         }
     } else {
-        console.log('Zoho Mail server is ready to send messages');
+        console.log('SMTP server is ready to send messages');
     }
 });
 

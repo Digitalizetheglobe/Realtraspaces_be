@@ -18,8 +18,12 @@ const syncDatabase = async () => {
         await sequelize.authenticate();
         console.log('Database connection established successfully.');
 
-        await sequelize.sync({ alter: true });
-        console.log('All models were synchronized successfully.');
+        // In production, avoid `alter: true` as it can cause heavy ALTER TABLE operations
+        // and issues like "Too many keys specified; max 64 keys allowed" on large tables.
+        //
+        // Use simple sync to ensure models are initialized without altering existing schema.
+        await sequelize.sync();
+        console.log('All models were synchronized successfully (without alter).');
 
         User.hasMany(CookiePolicy, { foreignKey: 'userId', as: 'cookiePolicies' });
         CookiePolicy.belongsTo(User, { foreignKey: 'userId', as: 'user' });

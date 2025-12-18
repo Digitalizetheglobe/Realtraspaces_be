@@ -2,7 +2,10 @@ const transporter = require('../config/email.config');
 
 class EmailService {
     constructor() {
-        this.fromEmail = 'Info@realtraspaces.com';
+        // Use SMTP_FROM if provided, otherwise fall back to the actual SMTP user.
+        // This avoids "553 Sender is not allowed to relay emails" errors where
+        // the FROM address does not match the authenticated SMTP account.
+        this.fromEmail = process.env.SMTP_FROM || process.env.SMTP_USER;
         this.companyName = 'Realtraspaces';
     }
 

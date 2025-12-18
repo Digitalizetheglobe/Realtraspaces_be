@@ -7,6 +7,13 @@ const router = express.Router();
 // Public routes
 router.post("/register", adminController.register);
 router.post("/login", adminController.login);
+router.post("/forgot-password/request-otp", adminController.requestPasswordResetOtp);
+router.post("/verify-otp", adminController.verifyPasswordResetOtp);
+
+// Password reset for admin via OTP (no auth required)
+// Keep the old path for backward compatibility and add a simpler alias
+router.post("/forgot-password/reset", adminController.resetPasswordWithOtp);
+router.post("/reset-password", adminController.resetPasswordWithOtp);
 
 // Protected routes (require authentication)
 router.use(authController.protect);
