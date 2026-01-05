@@ -3,7 +3,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 const path = require('path');
 
-const BASE_URL = 'https://api.realtraspaces.com/api/developers';
+const BASE_URL = 'http://localhost:8000/api/developers';
 
 // Test creating a developer with logo
 async function testCreateDeveloper() {

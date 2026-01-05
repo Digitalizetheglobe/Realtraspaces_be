@@ -5,7 +5,7 @@ This API provides endpoints for managing property listings in the Real Estate Sp
 
 ## Base URL
 ```
-https://api.realtraspaces.com/api/property-listings
+http://localhost:8000/api/property-listings
 ```
 
 ## Endpoints

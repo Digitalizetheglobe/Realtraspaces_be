@@ -5,7 +5,7 @@ async function testWebUsersAPI() {
   try {
     console.log('🧪 Testing WebUsers API...\n');
     
-    const response = await fetch('https://api.realtraspaces.com/api/webusers', {
+    const response = await fetch('http://localhost:8000/api/webusers', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

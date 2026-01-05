@@ -4,7 +4,7 @@ This API provides endpoints for managing cookie policy acceptance in the Realtra
 
 ## Base URL
 ```
-https://api.realtraspaces.com/api/cookie-policy
+http://localhost:8000/api/cookie-policy
 ```
 
 ## Endpoints

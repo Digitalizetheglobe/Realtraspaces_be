@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BASE_URL = 'https://api.realtraspaces.com';
+const BASE_URL = 'http://localhost:8000';
 
 async function testAPIs() {
     console.log('Testing Realtraspaces APIs...\n');
