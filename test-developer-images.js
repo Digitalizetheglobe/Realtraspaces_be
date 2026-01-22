@@ -8,12 +8,12 @@ const BASE_URL = 'http://localhost:8000/api/developers';
 // Test creating a developer with logo
 async function testCreateDeveloper() {
   console.log('Testing developer creation...');
-  
+
   const formData = new FormData();
   formData.append('buildername', 'Test Developer');
   formData.append('descriptions', 'A test developer for image testing');
   formData.append('project_name', JSON.stringify(['Project 1', 'Project 2']));
-  
+
   // Add a logo file if you have one
   // formData.append('builder_logo', fs.createReadStream('./test-logo.png'));
 
@@ -34,9 +34,9 @@ async function testCreateDeveloper() {
 // Test uploading multiple images
 async function testUploadImages(developerId) {
   console.log(`Testing image upload for developer ${developerId}...`);
-  
+
   const formData = new FormData();
-  
+
   // Add multiple image files if you have them
   // formData.append('images', fs.createReadStream('./test-image1.jpg'));
   // formData.append('images', fs.createReadStream('./test-image2.jpg'));
@@ -58,7 +58,7 @@ async function testUploadImages(developerId) {
 // Test getting all developers
 async function testGetAllDevelopers() {
   console.log('Testing get all developers...');
-  
+
   try {
     const response = await fetch(BASE_URL);
     const result = await response.json();
@@ -71,7 +71,7 @@ async function testGetAllDevelopers() {
 // Test getting a specific developer
 async function testGetDeveloper(developerId) {
   console.log(`Testing get developer ${developerId}...`);
-  
+
   try {
     const response = await fetch(`${BASE_URL}/${developerId}`);
     const result = await response.json();
@@ -84,7 +84,7 @@ async function testGetDeveloper(developerId) {
 // Test deleting a specific image
 async function testDeleteImage(developerId, imageIndex) {
   console.log(`Testing delete image ${imageIndex} from developer ${developerId}...`);
-  
+
   try {
     const response = await fetch(`${BASE_URL}/${developerId}/images/${imageIndex}`, {
       method: 'DELETE'
@@ -100,7 +100,7 @@ async function testDeleteImage(developerId, imageIndex) {
 // Test updating a developer
 async function testUpdateDeveloper(developerId) {
   console.log(`Testing update developer ${developerId}...`);
-  
+
   const updateData = {
     buildername: 'Updated Test Developer',
     descriptions: 'Updated description with images support',
@@ -127,7 +127,7 @@ async function testUpdateDeveloper(developerId) {
 // Test deleting a developer
 async function testDeleteDeveloper(developerId) {
   console.log(`Testing delete developer ${developerId}...`);
-  
+
   try {
     const response = await fetch(`${BASE_URL}/${developerId}`, {
       method: 'DELETE'

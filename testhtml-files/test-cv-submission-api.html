@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,33 +13,44 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+
         .form-container {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="file"], 
-        textarea, select, input[type="number"] {
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="file"],
+        textarea,
+        select,
+        input[type="number"] {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         textarea {
             height: 100px;
             resize: vertical;
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -48,15 +60,19 @@
             cursor: pointer;
             margin-right: 10px;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         button.danger {
             background-color: #dc3545;
         }
+
         button.danger:hover {
             background-color: #c82333;
         }
+
         .response {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -68,21 +84,25 @@
             max-height: 400px;
             overflow-y: auto;
         }
+
         .success {
             border-color: #28a745;
             background-color: #d4edda;
         }
+
         .error {
             border-color: #dc3545;
             background-color: #f8d7da;
         }
+
         .submissions-list {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .submission-item {
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -90,9 +110,11 @@
             margin-bottom: 15px;
             background: #f9f9f9;
         }
+
         .submission-item h3 {
             margin-top: 0;
         }
+
         .status-badge {
             padding: 4px 8px;
             border-radius: 4px;
@@ -100,55 +122,80 @@
             font-weight: bold;
             text-transform: uppercase;
         }
-        .status-pending { background-color: #ffc107; color: #000; }
-        .status-reviewed { background-color: #17a2b8; color: #fff; }
-        .status-contacted { background-color: #28a745; color: #fff; }
-        .status-rejected { background-color: #dc3545; color: #fff; }
+
+        .status-pending {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .status-reviewed {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+
+        .status-contacted {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .status-rejected {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
         .file-link {
             color: #007bff;
             text-decoration: none;
             font-weight: bold;
         }
+
         .file-link:hover {
             text-decoration: underline;
         }
+
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
+
         .stat-card {
             background: white;
             padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
+
         .stat-number {
             font-size: 24px;
             font-weight: bold;
             color: #007bff;
         }
+
         .stat-label {
             font-size: 14px;
             color: #666;
             margin-top: 5px;
         }
+
         .filters {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
+
         .required {
             color: red;
         }
     </style>
 </head>
+
 <body>
     <h1>CV Submission API Test</h1>
-    
+
     <!-- Submit CV Form (Public) -->
     <div class="form-container">
         <h2>Submit Your CV</h2>
@@ -157,33 +204,34 @@
                 <label for="first_name">First Name: <span class="required">*</span></label>
                 <input type="text" id="first_name" name="first_name" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="last_name">Last Name: <span class="required">*</span></label>
                 <input type="text" id="last_name" name="last_name" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="phone_number">Phone Number: <span class="required">*</span></label>
                 <input type="tel" id="phone_number" name="phone_number" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="email_id">Email ID: <span class="required">*</span></label>
                 <input type="email" id="email_id" name="email_id" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="message">Message:</label>
-                <textarea id="message" name="message" placeholder="Tell us about yourself or the position you're interested in"></textarea>
+                <textarea id="message" name="message"
+                    placeholder="Tell us about yourself or the position you're interested in"></textarea>
             </div>
-            
+
             <div class="form-group">
                 <label for="cv_file">Upload Your CV (PDF or Image):</label>
                 <input type="file" id="cv_file" name="cv_file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp">
                 <small>Supported formats: PDF, JPEG, PNG, GIF, WebP (Max: 10MB)</small>
             </div>
-            
+
             <button type="submit">Submit CV</button>
         </form>
         <div id="submitResponse" class="response"></div>
@@ -293,20 +341,20 @@
         // Submit CV
         document.getElementById('submitCVForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formData = new FormData(e.target);
-            
+
             try {
                 const response = await fetch(`${API_BASE}/submit`, {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
                 const responseDiv = document.getElementById('submitResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
-                
+
                 if (response.ok) {
                     e.target.reset();
                     loadSubmissionsList(); // Refresh the list
@@ -324,11 +372,11 @@
             try {
                 const response = await fetch(`${API_BASE}/stats`);
                 const result = await response.json();
-                
+
                 if (response.ok && result.success) {
                     const statsContainer = document.getElementById('statsContainer');
                     const data = result.data;
-                    
+
                     statsContainer.innerHTML = `
                         <div class="stat-card">
                             <div class="stat-number">${data.total}</div>
@@ -352,7 +400,7 @@
                         </div>
                     `;
                 }
-                
+
                 const responseDiv = document.getElementById('statsResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
@@ -369,15 +417,15 @@
             const status = document.getElementById('statusFilter').value;
             const page = document.getElementById('pageNumber').value;
             const limit = document.getElementById('pageLimit').value;
-            
+
             const params = new URLSearchParams();
             if (search) params.append('search', search);
             if (status) params.append('status', status);
             if (page) params.append('page', page);
             if (limit) params.append('limit', limit);
-            
+
             const url = `${API_BASE}?${params.toString()}`;
-            
+
             try {
                 const response = await fetch(url);
                 const result = await response.json();
@@ -398,7 +446,7 @@
                 alert('Please enter a submission ID');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE}/${id}`);
                 const result = await response.json();
@@ -417,12 +465,12 @@
             const id = document.getElementById('updateSubmissionId').value;
             const status = document.getElementById('updateStatus').value;
             const admin_notes = document.getElementById('adminNotes').value;
-            
+
             if (!id || !status) {
                 alert('Please enter submission ID and select a status');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE}/${id}/status`, {
                     method: 'PUT',
@@ -434,12 +482,12 @@
                         admin_notes: admin_notes || undefined
                     })
                 });
-                
+
                 const result = await response.json();
                 const responseDiv = document.getElementById('updateResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
-                
+
                 if (response.ok) {
                     loadSubmissionsList(); // Refresh the list
                     getSubmissionStats(); // Refresh stats
@@ -458,21 +506,21 @@
                 alert('Please enter a submission ID');
                 return;
             }
-            
+
             if (!confirm('Are you sure you want to delete this submission? This action cannot be undone.')) {
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE}/${id}`, {
                     method: 'DELETE'
                 });
-                
+
                 const result = await response.json();
                 const responseDiv = document.getElementById('deleteResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
-                
+
                 if (response.ok) {
                     document.getElementById('deleteSubmissionId').value = '';
                     loadSubmissionsList(); // Refresh the list
@@ -491,7 +539,7 @@
                 const response = await fetch(`${API_BASE}?limit=20`);
                 const result = await response.json();
                 const listDiv = document.getElementById('submissionsList');
-                
+
                 if (response.ok && result.success) {
                     listDiv.innerHTML = result.data.map(submission => `
                         <div class="submission-item">
@@ -530,4 +578,5 @@
         getSubmissionStats();
     </script>
 </body>
+
 </html>

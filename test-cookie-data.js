@@ -29,7 +29,7 @@ const sampleData = [
 
 async function addSampleData() {
   console.log('Adding sample cookie policy data...');
-  
+
   for (let i = 0; i < sampleData.length; i++) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/cookie-policy/accept`, {
@@ -39,7 +39,7 @@ async function addSampleData() {
         },
         body: JSON.stringify(sampleData[i])
       });
-      
+
       if (response.ok) {
         const result = await response.json();
         console.log(`✅ Sample data ${i + 1} added successfully:`, result.message);
@@ -49,11 +49,11 @@ async function addSampleData() {
     } catch (error) {
       console.log(`❌ Error adding sample data ${i + 1}:`, error.message);
     }
-    
+
     // Add a small delay between requests
     await new Promise(resolve => setTimeout(resolve, 100));
   }
-  
+
   console.log('\nSample data addition completed!');
   console.log('You can now visit the dashboard to see the data.');
 }

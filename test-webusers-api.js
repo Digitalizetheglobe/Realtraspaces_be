@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 async function testWebUsersAPI() {
   try {
     console.log('🧪 Testing WebUsers API...\n');
-    
+
     const response = await fetch('http://localhost:8000/api/webusers', {
       method: 'GET',
       headers: {
@@ -19,11 +19,11 @@ async function testWebUsersAPI() {
       const data = await response.json();
       console.log('\n✅ API Response:');
       console.log(JSON.stringify(data, null, 2));
-      
+
       if (data.status === 'success') {
         console.log(`\n📊 Total Users: ${data.count}`);
         console.log(`📊 Users Data Length: ${data.data.length}`);
-        
+
         if (data.data.length > 0) {
           console.log('\n👤 Sample User Data:');
           console.log(JSON.stringify(data.data[0], null, 2));

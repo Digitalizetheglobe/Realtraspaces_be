@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,23 +13,27 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+
         .container {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .endpoint {
             background: #e8f4fd;
             padding: 15px;
             border-left: 4px solid #007acc;
             margin-bottom: 15px;
         }
+
         .method {
             font-weight: bold;
             color: #007acc;
         }
+
         textarea {
             width: 100%;
             height: 200px;
@@ -38,6 +43,7 @@
             border-radius: 4px;
             padding: 10px;
         }
+
         button {
             background: #007acc;
             color: white;
@@ -47,9 +53,11 @@
             cursor: pointer;
             margin: 5px;
         }
+
         button:hover {
             background: #005a9e;
         }
+
         .response {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -62,37 +70,46 @@
             max-height: 300px;
             overflow-y: auto;
         }
+
         .success {
             border-left: 4px solid #28a745;
             background: #d4edda;
         }
+
         .error {
             border-left: 4px solid #dc3545;
             background: #f8d7da;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input, select {
+
+        input,
+        select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         textarea {
             resize: vertical;
         }
+
         small {
             font-size: 11px;
             margin-top: 5px;
             display: block;
         }
+
         .json-examples {
             background: #fff3cd;
             border: 1px solid #ffeaa7;
@@ -100,11 +117,13 @@
             padding: 15px;
             margin-bottom: 15px;
         }
+
         .image-preview {
             position: relative;
             display: inline-block;
             margin: 5px;
         }
+
         .image-preview img {
             width: 100px;
             height: 100px;
@@ -112,6 +131,7 @@
             border-radius: 4px;
             border: 2px solid #ddd;
         }
+
         .image-preview .remove-btn {
             position: absolute;
             top: -5px;
@@ -128,9 +148,11 @@
             align-items: center;
             justify-content: center;
         }
+
         .image-preview .remove-btn:hover {
             background: #c82333;
         }
+
         .upload-area {
             border: 2px dashed #ddd;
             border-radius: 4px;
@@ -140,24 +162,27 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .upload-area:hover {
             border-color: #007acc;
             background: #e8f4fd;
         }
+
         .upload-area.dragover {
             border-color: #007acc;
             background: #e8f4fd;
         }
     </style>
 </head>
+
 <body>
     <h1>Property Listing API Test Suite</h1>
-    
+
     <div class="container">
         <h2>Base Configuration</h2>
         <div class="form-group">
             <label>API Base URL:</label>
-            <input type="text" id="baseUrl" value="http://localhost:5000/api/property-listings">
+            <input type="text" id="baseUrl" value="http://localhost:8000/api/property-listings">
         </div>
     </div>
 
@@ -166,7 +191,7 @@
         <div class="endpoint">
             <span class="method">POST</span> /api/property-listings/create
         </div>
-        
+
         <div class="json-examples">
             <h4>📝 Load Test Data:</h4>
             <button onclick="loadCreateExample(1)">Office Space</button>
@@ -188,67 +213,70 @@
                 <label>Location:</label>
                 <input type="text" id="createLocation" placeholder="Sector 18, Gurgaon">
             </div>
-             <div class="form-group">
-                 <label>Property Type:</label>
-                 <select id="createPropertyType">
-                     <option value="">Select Property Type</option>
-                     <option value="Office">Office</option>
-                     <option value="Retail">Retail</option>
-                     <option value="Coworking">Coworking</option>
-                     <option value="Industrial or warehouse">Industrial or warehouse</option>
-                     <option value="Land">Land</option>
-                     <option value="Others">Others</option>
-                 </select>
-             </div>
-             <div class="form-group">
-                 <label>Transaction Type:</label>
-                 <select id="createTransactionType">
-                     <option value="">Select Transaction Type</option>
-                     <option value="Lease">Lease</option>
-                     <option value="Sale">Sale</option>
-                     <option value="BOTH">BOTH</option>
-                     <option value="Preleased">Preleased</option>
-                 </select>
-             </div>
-             <div class="form-group">
-                 <label>Area Carpet:</label>
-                 <input type="text" id="createAreaCarpet" placeholder="3200 sq ft">
-             </div>
-             <div class="form-group">
-                 <label>Area Builtup:</label>
-                 <input type="text" id="createAreaBuiltup" placeholder="4000 sq ft">
-             </div>
-             <div class="form-group">
-                 <label>Rent (₹):</label>
-                 <input type="number" id="createRent" placeholder="180000" step="0.01">
-             </div>
-             <div class="form-group">
-                 <label>Price (₹):</label>
-                 <input type="number" id="createPrice" placeholder="12000000" step="0.01">
-             </div>
-             <div class="form-group">
-                 <label>Contact Name:</label>
-                 <input type="text" id="createContactName" placeholder="Rahul Mehta">
-             </div>
-             <div class="form-group">
-                 <label>Contact Number:</label>
-                 <input type="tel" id="createContactNumber" placeholder="+91-9988776655">
-             </div>
-             <div class="form-group" style="grid-column: span 2;">
-                 <label>Email Address:</label>
-                 <input type="email" id="createEmailAddress" placeholder="rahul.mehta@techproperties.com">
-             </div>
+            <div class="form-group">
+                <label>Property Type:</label>
+                <select id="createPropertyType">
+                    <option value="">Select Property Type</option>
+                    <option value="Office">Office</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Coworking">Coworking</option>
+                    <option value="Industrial or warehouse">Industrial or warehouse</option>
+                    <option value="Land">Land</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Transaction Type:</label>
+                <select id="createTransactionType">
+                    <option value="">Select Transaction Type</option>
+                    <option value="Lease">Lease</option>
+                    <option value="Sale">Sale</option>
+                    <option value="BOTH">BOTH</option>
+                    <option value="Preleased">Preleased</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Area Carpet:</label>
+                <input type="text" id="createAreaCarpet" placeholder="3200 sq ft">
+            </div>
+            <div class="form-group">
+                <label>Area Builtup:</label>
+                <input type="text" id="createAreaBuiltup" placeholder="4000 sq ft">
+            </div>
+            <div class="form-group">
+                <label>Rent (₹):</label>
+                <input type="number" id="createRent" placeholder="180000" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Price (₹):</label>
+                <input type="number" id="createPrice" placeholder="12000000" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>Contact Name:</label>
+                <input type="text" id="createContactName" placeholder="Rahul Mehta">
+            </div>
+            <div class="form-group">
+                <label>Contact Number:</label>
+                <input type="tel" id="createContactNumber" placeholder="+91-9988776655">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Email Address:</label>
+                <input type="email" id="createEmailAddress" placeholder="rahul.mehta@techproperties.com">
+            </div>
             <div class="form-group" style="grid-column: span 2;">
                 <label>Description:</label>
-                <textarea id="createDescription" rows="3" placeholder="Premium office space with sea view, fully furnished with modern amenities..."></textarea>
+                <textarea id="createDescription" rows="3"
+                    placeholder="Premium office space with sea view, fully furnished with modern amenities..."></textarea>
             </div>
             <div class="form-group" style="grid-column: span 2;">
                 <label>Property Images:</label>
-                <div class="upload-area" onclick="document.getElementById('createImages').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                <div class="upload-area" onclick="document.getElementById('createImages').click()"
+                    ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
                     <p>📁 Click to select images or drag & drop here</p>
                     <small>Supports JPG, PNG, WebP files</small>
                 </div>
-                <input type="file" id="createImages" multiple accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
+                <input type="file" id="createImages" multiple accept="image/*" onchange="handleImageUpload(event)"
+                    style="display: none;">
                 <div id="imagePreview" style="margin-top: 15px;"></div>
                 <div id="imageList" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
             </div>
@@ -263,12 +291,13 @@
         <div class="endpoint">
             <span class="method">GET</span> /api/property-listings/all
         </div>
-        
+
         <div class="form-group">
             <label>Query Parameters (optional):</label>
-            <input type="text" id="getAllParams" placeholder="page=1&limit=10&status=approved&propertyType=Office&search=gurgaon">
+            <input type="text" id="getAllParams"
+                placeholder="page=1&limit=10&status=approved&propertyType=Office&search=gurgaon">
         </div>
-        
+
         <button onclick="testGetAll()">📋 Test Get All</button>
         <button onclick="testGetAllWithFilters()">🔍 Test with Filters</button>
         <div id="getAllResponse" class="response"></div>
@@ -279,12 +308,12 @@
         <div class="endpoint">
             <span class="method">GET</span> /api/property-listings/:id
         </div>
-        
+
         <div class="form-group">
             <label>Property ID:</label>
             <input type="number" id="getById" placeholder="1">
         </div>
-        
+
         <button onclick="testGetById()">🔍 Test Get By ID</button>
         <div id="getByIdResponse" class="response"></div>
     </div>
@@ -294,7 +323,7 @@
         <div class="endpoint">
             <span class="method">PUT</span> /api/property-listings/:id
         </div>
-        
+
         <div class="form-group">
             <label>Property ID to Update:</label>
             <input type="number" id="updateId" placeholder="1">
@@ -327,12 +356,12 @@
         <div class="endpoint">
             <span class="method">PATCH</span> /api/property-listings/:id/status
         </div>
-        
+
         <div class="form-group">
             <label>Property ID:</label>
             <input type="number" id="statusId" placeholder="1">
         </div>
-        
+
         <div class="form-group">
             <label>New Status:</label>
             <select id="newStatus">
@@ -343,7 +372,7 @@
                 <option value="inactive">inactive</option>
             </select>
         </div>
-        
+
         <button onclick="testUpdateStatus()">🔄 Test Update Status</button>
         <div id="statusResponse" class="response"></div>
     </div>
@@ -353,7 +382,7 @@
         <div class="endpoint">
             <span class="method">GET</span> /api/property-listings/status/:status
         </div>
-        
+
         <div class="form-group">
             <label>Status:</label>
             <select id="getByStatus">
@@ -364,7 +393,7 @@
                 <option value="inactive">inactive</option>
             </select>
         </div>
-        
+
         <button onclick="testGetByStatus()">📊 Test Get By Status</button>
         <div id="getByStatusResponse" class="response"></div>
     </div>
@@ -374,12 +403,12 @@
         <div class="endpoint">
             <span class="method">DELETE</span> /api/property-listings/:id
         </div>
-        
+
         <div class="form-group">
             <label>Property ID to Delete:</label>
             <input type="number" id="deleteId" placeholder="1">
         </div>
-        
+
         <button onclick="testDelete()" style="background: #dc3545;">🗑️ Test Delete</button>
         <div id="deleteResponse" class="response"></div>
     </div>
@@ -389,7 +418,7 @@
         <div class="endpoint">
             <span class="method">DELETE</span> /api/property-listings/delete-all?confirm=true
         </div>
-        
+
         <button onclick="testDeleteAll()" style="background: #dc3545;">⚠️ Test Delete All (Dangerous!)</button>
         <div id="deleteAllResponse" class="response"></div>
     </div>
@@ -540,7 +569,7 @@
 
         function loadCreateExample(num) {
             const example = createExamples[num];
-            
+
             document.getElementById('createPropertyName').value = example.propertyName || '';
             document.getElementById('createLocation').value = example.location || '';
             document.getElementById('createPropertyType').value = example.propertyType || '';
@@ -553,7 +582,7 @@
             document.getElementById('createContactNumber').value = example.contactNumber || '';
             document.getElementById('createEmailAddress').value = example.emailAddress || '';
             document.getElementById('createDescription').value = example.description || '';
-            
+
             // Clear any existing images when loading examples
             clearImages();
         }
@@ -584,7 +613,7 @@
             event.preventDefault();
             event.stopPropagation();
             event.target.classList.remove('dragover');
-            
+
             const files = Array.from(event.dataTransfer.files).filter(file => file.type.startsWith('image/'));
             addFiles(files);
         }
@@ -604,15 +633,15 @@
         function addFiles(files) {
             files.forEach(file => {
                 // Check if file already exists
-                const exists = selectedFiles.some(existingFile => 
+                const exists = selectedFiles.some(existingFile =>
                     existingFile.name === file.name && existingFile.size === file.size
                 );
-                
+
                 if (!exists) {
                     selectedFiles.push(file);
                 }
             });
-            
+
             updateImagePreview();
             updateImageList();
         }
@@ -636,15 +665,15 @@
 
             selectedFiles.forEach((file, index) => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const imageDiv = document.createElement('div');
                     imageDiv.className = 'image-preview';
-                    
+
                     imageDiv.innerHTML = `
                         <img src="${e.target.result}" alt="${file.name}" title="${file.name}">
                         <button class="remove-btn" onclick="removeImage(${index})" title="Remove image">×</button>
                     `;
-                    
+
                     previewDiv.appendChild(imageDiv);
                 };
                 reader.readAsDataURL(file);
@@ -855,9 +884,10 @@
         }
 
         // Load first example on page load
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             loadCreateExample(1);
         });
     </script>
 </body>
+
 </html>

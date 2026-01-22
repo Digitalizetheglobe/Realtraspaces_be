@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,25 +12,32 @@
             margin: 0 auto;
             padding: 20px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input, textarea, select {
+
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         textarea {
             height: 100px;
             resize: vertical;
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -39,20 +47,24 @@
             cursor: pointer;
             margin-right: 10px;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .response {
             margin-top: 20px;
             padding: 15px;
             border-radius: 4px;
             white-space: pre-wrap;
         }
+
         .success {
             background-color: #d4edda;
             border: 1px solid #c3e6cb;
             color: #155724;
         }
+
         .error {
             background-color: #f8d7da;
             border: 1px solid #f5c6cb;
@@ -60,9 +72,10 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Test Edit Blog API</h1>
-    
+
     <div class="form-group">
         <label for="blogId">Blog ID to Edit:</label>
         <input type="text" id="blogId" placeholder="Enter blog ID">
@@ -122,7 +135,7 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/${blogId}`);
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     // Populate form with existing data
                     document.getElementById('blogTitle').value = data.data.blogTitle || '';
@@ -131,7 +144,7 @@
                     document.getElementById('writer').value = data.data.writer || '';
                     document.getElementById('category').value = data.data.category || '';
                     document.getElementById('tags').value = data.data.tags ? data.data.tags.join(', ') : '';
-                    
+
                     showResponse('Blog loaded successfully!\n' + JSON.stringify(data, null, 2), 'success');
                 } else {
                     showResponse('Error: ' + data.message, 'error');
@@ -154,7 +167,7 @@
             formData.append('blogContent', document.getElementById('blogContent').value);
             formData.append('writer', document.getElementById('writer').value);
             formData.append('category', document.getElementById('category').value);
-            
+
             const tags = document.getElementById('tags').value;
             if (tags) {
                 formData.append('tags', JSON.stringify(tags.split(',').map(tag => tag.trim())));
@@ -170,9 +183,9 @@
                     method: 'PUT',
                     body: formData
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     showResponse('Blog updated successfully!\n' + JSON.stringify(data, null, 2), 'success');
                 } else {
@@ -203,4 +216,5 @@
         }
     </script>
 </body>
+
 </html>

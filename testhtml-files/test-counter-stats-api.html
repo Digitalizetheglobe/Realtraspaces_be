@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,34 +13,43 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+
         .container {
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
-        h1, h2 {
+
+        h1,
+        h2 {
             color: #333;
             border-bottom: 2px solid #007bff;
             padding-bottom: 10px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
-        input, textarea, select {
+
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -51,28 +61,36 @@
             margin-right: 10px;
             margin-bottom: 10px;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .danger {
             background-color: #dc3545;
         }
+
         .danger:hover {
             background-color: #c82333;
         }
+
         .success {
             background-color: #28a745;
         }
+
         .success:hover {
             background-color: #218838;
         }
+
         .warning {
             background-color: #ffc107;
             color: #212529;
         }
+
         .warning:hover {
             background-color: #e0a800;
         }
+
         .response {
             background-color: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -85,44 +103,52 @@
             max-height: 400px;
             overflow-y: auto;
         }
+
         .current-stats {
             background-color: #e8f4f8;
             border-left: 4px solid #007bff;
             padding: 15px;
             margin: 20px 0;
         }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
+
         .stat-card {
             background: white;
             padding: 15px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .stat-number {
             font-size: 2em;
             font-weight: bold;
             color: #007bff;
             margin-bottom: 5px;
         }
+
         .stat-label {
             color: #666;
             font-size: 0.9em;
         }
+
         .flex-container {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
         }
+
         .flex-item {
             flex: 1;
             min-width: 300px;
         }
+
         .url-display {
             background-color: #e9ecef;
             padding: 8px;
@@ -134,11 +160,13 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Counter Statistics API Test Interface</h1>
-        <p>Test the Counter Stats API endpoints. The API manages counter statistics for Years in Business, Properties Sold, Happy Clients, Awards Won, and 2 demo fields.</p>
-        
+        <p>Test the Counter Stats API endpoints. The API manages counter statistics for Years in Business, Properties
+            Sold, Happy Clients, Awards Won, and 2 demo fields.</p>
+
         <div id="currentStats" class="current-stats">
             <h3>Current Counter Statistics</h3>
             <button onclick="loadCurrentStats()">Refresh Stats</button>
@@ -304,7 +332,8 @@
     <div class="container">
         <h2>7. Reset Counter Stats to Default</h2>
         <div class="url-display">POST /api/counter-stats/reset?confirm=true</div>
-        <p style="color: #dc3545; font-weight: bold;">⚠️ This will deactivate all existing counter stats and create new default ones!</p>
+        <p style="color: #dc3545; font-weight: bold;">⚠️ This will deactivate all existing counter stats and create new
+            default ones!</p>
         <button class="danger" onclick="resetStats()">Reset to Default Values</button>
         <div id="resetResponse" class="response"></div>
     </div>
@@ -313,7 +342,7 @@
         const API_BASE = 'http://localhost:8000/api/counter-stats';
 
         // Load and display current stats on page load
-        window.onload = function() {
+        window.onload = function () {
             loadCurrentStats();
         };
 
@@ -332,7 +361,7 @@
 
                 const response = await fetch(url, options);
                 const data = await response.json();
-                
+
                 return {
                     status: response.status,
                     data: data,
@@ -415,12 +444,12 @@
             const page = document.getElementById('getAllPage').value;
             const limit = document.getElementById('getAllLimit').value;
             const includeInactive = document.getElementById('includeInactive').checked;
-            
+
             let url = `${API_BASE}/all?page=${page}&limit=${limit}`;
             if (includeInactive) {
                 url += '&includeInactive=true';
             }
-            
+
             const response = await makeRequest(url);
             displayResponse('getAllResponse', response);
         }
@@ -439,7 +468,7 @@
 
             const response = await makeRequest(`${API_BASE}/create`, 'POST', body);
             displayResponse('createResponse', response);
-            
+
             if (response.ok) {
                 loadCurrentStats();
             }
@@ -447,13 +476,13 @@
 
         async function updateActiveStats() {
             const body = {};
-            
+
             const fields = [
                 'updateYears', 'updateProperties', 'updateClients', 'updateAwards',
                 'updateDemo1', 'updateDemo2'
             ];
             const labels = ['updateDemo1Label', 'updateDemo2Label'];
-            
+
             fields.forEach(field => {
                 const value = document.getElementById(field).value;
                 if (value) {
@@ -466,7 +495,7 @@
                     else if (key === 'demo2') body.demoField2 = parseInt(value);
                 }
             });
-            
+
             labels.forEach(field => {
                 const value = document.getElementById(field).value;
                 if (value) {
@@ -482,7 +511,7 @@
 
             const response = await makeRequest(`${API_BASE}/active`, 'PUT', body);
             displayResponse('updateActiveResponse', response);
-            
+
             if (response.ok) {
                 loadCurrentStats();
             }
@@ -502,7 +531,7 @@
                 { id: 'updateByIdClients', key: 'happyClients' },
                 { id: 'updateByIdAwards', key: 'awardsWon' }
             ];
-            
+
             fields.forEach(field => {
                 const value = document.getElementById(field.id).value;
                 if (value) {
@@ -517,7 +546,7 @@
 
             const response = await makeRequest(`${API_BASE}/${id}`, 'PUT', body);
             displayResponse('updateByIdResponse', response);
-            
+
             if (response.ok) {
                 loadCurrentStats();
             }
@@ -536,7 +565,7 @@
 
             const response = await makeRequest(`${API_BASE}/${id}`, 'DELETE');
             displayResponse('deleteResponse', response);
-            
+
             if (response.ok) {
                 loadCurrentStats();
             }
@@ -549,11 +578,12 @@
 
             const response = await makeRequest(`${API_BASE}/reset?confirm=true`, 'POST');
             displayResponse('resetResponse', response);
-            
+
             if (response.ok) {
                 loadCurrentStats();
             }
         }
     </script>
 </body>
+
 </html>

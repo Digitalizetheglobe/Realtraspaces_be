@@ -22,7 +22,7 @@ async function testEditBlogAPI() {
         console.log('1. Getting all blogs...');
         const getAllResponse = await fetch(`${API_BASE_URL}`);
         const allBlogs = await getAllResponse.json();
-        
+
         if (!allBlogs.data || allBlogs.data.length === 0) {
             console.log('❌ No blogs found. Please create a blog first.');
             return;
@@ -36,7 +36,7 @@ async function testEditBlogAPI() {
         // Test 1: Update blog without images
         console.log('2. Testing blog update without images...');
         const formData = new FormData();
-        
+
         Object.keys(testBlogData).forEach(key => {
             formData.append(key, testBlogData[key]);
         });
@@ -47,7 +47,7 @@ async function testEditBlogAPI() {
         });
 
         const updateResult = await updateResponse.json();
-        
+
         if (updateResponse.ok) {
             console.log('✅ Blog updated successfully!');
             console.log(`   New title: ${updateResult.data.blogTitle}`);
@@ -60,7 +60,7 @@ async function testEditBlogAPI() {
         console.log('\n3. Verifying updated blog...');
         const getResponse = await fetch(`${API_BASE_URL}/${blogId}`);
         const getResult = await getResponse.json();
-        
+
         if (getResponse.ok) {
             console.log('✅ Blog retrieved successfully!');
             console.log(`   Title: ${getResult.data.blogTitle}`);
@@ -82,7 +82,7 @@ async function testEditBlogAPI() {
         });
 
         const partialUpdateResult = await partialUpdateResponse.json();
-        
+
         if (partialUpdateResponse.ok) {
             console.log('✅ Partial update successful!');
             console.log(`   New title: ${partialUpdateResult.data.blogTitle}`);
@@ -106,7 +106,7 @@ async function testEditBlogWithImages() {
         // Get a blog to update
         const getAllResponse = await fetch(`${API_BASE_URL}`);
         const allBlogs = await getAllResponse.json();
-        
+
         if (!allBlogs.data || allBlogs.data.length === 0) {
             console.log('❌ No blogs found. Please create a blog first.');
             return;
@@ -133,7 +133,7 @@ async function testEditBlogWithImages() {
         });
 
         const updateResult = await updateResponse.json();
-        
+
         if (updateResponse.ok) {
             console.log('✅ Blog updated with images successfully!');
             console.log(`   Images: ${updateResult.data.blogImages ? updateResult.data.blogImages.join(', ') : 'None'}`);

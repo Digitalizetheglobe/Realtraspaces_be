@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,33 +13,43 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+
         .form-container {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="email"], input[type="tel"], 
-        textarea, select, input[type="number"] {
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select,
+        input[type="number"] {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         textarea {
             height: 100px;
             resize: vertical;
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -49,21 +60,27 @@
             margin-right: 10px;
             margin-bottom: 10px;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         button.danger {
             background-color: #dc3545;
         }
+
         button.danger:hover {
             background-color: #c82333;
         }
+
         button.success {
             background-color: #28a745;
         }
+
         button.success:hover {
             background-color: #218838;
         }
+
         .response {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -75,21 +92,25 @@
             max-height: 400px;
             overflow-y: auto;
         }
+
         .success {
             border-color: #28a745;
             background-color: #d4edda;
         }
+
         .error {
             border-color: #dc3545;
             background-color: #f8d7da;
         }
+
         .contacts-list {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .contact-item {
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -97,9 +118,11 @@
             margin-bottom: 15px;
             background: #f9f9f9;
         }
+
         .contact-item h3 {
             margin-top: 0;
         }
+
         .status-badge {
             padding: 4px 8px;
             border-radius: 4px;
@@ -107,51 +130,76 @@
             font-weight: bold;
             text-transform: uppercase;
         }
-        .status-new { background-color: #007bff; color: #fff; }
-        .status-read { background-color: #6c757d; color: #fff; }
-        .status-responded { background-color: #28a745; color: #fff; }
-        .status-closed { background-color: #dc3545; color: #fff; }
+
+        .status-new {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .status-read {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .status-responded {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .status-closed {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
+
         .stat-card {
             background: white;
             padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
+
         .stat-number {
             font-size: 24px;
             font-weight: bold;
             color: #007bff;
         }
+
         .stat-label {
             font-size: 14px;
             color: #666;
             margin-top: 5px;
         }
+
         .filters {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
+
         .required {
             color: red;
         }
+
         .bulk-actions {
             background: #e9ecef;
             padding: 15px;
             border-radius: 4px;
             margin: 15px 0;
         }
+
         .checkbox-group {
             margin-right: 10px;
         }
+
         .actions-row {
             display: flex;
             align-items: center;
@@ -160,9 +208,10 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Contact API Test</h1>
-    
+
     <!-- Submit Contact Form (Public) -->
     <div class="form-container">
         <h2>Submit Contact Form</h2>
@@ -171,27 +220,28 @@
                 <label for="name">Full Name: <span class="required">*</span></label>
                 <input type="text" id="name" name="name" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="email">Email: <span class="required">*</span></label>
                 <input type="email" id="email" name="email" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="phone_number">Phone Number: <span class="required">*</span></label>
                 <input type="tel" id="phone_number" name="phone_number" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="subject">Subject: <span class="required">*</span></label>
                 <input type="text" id="subject" name="subject" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="message">Message: <span class="required">*</span></label>
-                <textarea id="message" name="message" required placeholder="Please describe your inquiry in detail"></textarea>
+                <textarea id="message" name="message" required
+                    placeholder="Please describe your inquiry in detail"></textarea>
             </div>
-            
+
             <button type="submit">Submit Contact Form</button>
         </form>
         <div id="submitResponse" class="response"></div>
@@ -256,7 +306,7 @@
         </div>
         <button onclick="getAllContacts()">Load Contacts</button>
         <div id="getAllResponse" class="response"></div>
-        
+
         <!-- Bulk Actions -->
         <div class="bulk-actions" id="bulkActions" style="display: none;">
             <h4>Bulk Actions</h4>
@@ -336,10 +386,10 @@
         // Submit Contact Form
         document.getElementById('submitContactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
-            
+
             try {
                 const response = await fetch(`${API_BASE}/submit`, {
                     method: 'POST',
@@ -348,12 +398,12 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 const result = await response.json();
                 const responseDiv = document.getElementById('submitResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
-                
+
                 if (response.ok) {
                     e.target.reset();
                     loadContactsList(); // Refresh the list
@@ -371,11 +421,11 @@
             try {
                 const response = await fetch(`${API_BASE}/stats`);
                 const result = await response.json();
-                
+
                 if (response.ok && result.success) {
                     const statsContainer = document.getElementById('statsContainer');
                     const data = result.data;
-                    
+
                     statsContainer.innerHTML = `
                         <div class="stat-card">
                             <div class="stat-number">${data.total}</div>
@@ -407,7 +457,7 @@
                         </div>
                     `;
                 }
-                
+
                 const responseDiv = document.getElementById('statsResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
@@ -426,7 +476,7 @@
             const order = document.getElementById('sortOrder').value;
             const page = document.getElementById('pageNumber').value;
             const limit = document.getElementById('pageLimit').value;
-            
+
             const params = new URLSearchParams();
             if (search) params.append('search', search);
             if (status) params.append('status', status);
@@ -434,9 +484,9 @@
             if (order) params.append('order', order);
             if (page) params.append('page', page);
             if (limit) params.append('limit', limit);
-            
+
             const url = `${API_BASE}?${params.toString()}`;
-            
+
             try {
                 const response = await fetch(url);
                 const result = await response.json();
@@ -457,7 +507,7 @@
                 alert('Please enter a contact ID');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE}/${id}`);
                 const result = await response.json();
@@ -476,12 +526,12 @@
             const id = document.getElementById('updateContactId').value;
             const status = document.getElementById('updateStatus').value;
             const admin_notes = document.getElementById('adminNotes').value;
-            
+
             if (!id || !status) {
                 alert('Please enter contact ID and select a status');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE}/${id}/status`, {
                     method: 'PUT',
@@ -493,12 +543,12 @@
                         admin_notes: admin_notes || undefined
                     })
                 });
-                
+
                 const result = await response.json();
                 const responseDiv = document.getElementById('updateResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
-                
+
                 if (response.ok) {
                     loadContactsList(); // Refresh the list
                     getContactStats(); // Refresh stats
@@ -517,21 +567,21 @@
                 alert('Please enter a contact ID');
                 return;
             }
-            
+
             if (!confirm('Are you sure you want to delete this contact? This action cannot be undone.')) {
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE}/${id}`, {
                     method: 'DELETE'
                 });
-                
+
                 const result = await response.json();
                 const responseDiv = document.getElementById('deleteResponse');
                 responseDiv.textContent = JSON.stringify(result, null, 2);
                 responseDiv.className = response.ok ? 'response success' : 'response error';
-                
+
                 if (response.ok) {
                     document.getElementById('deleteContactId').value = '';
                     loadContactsList(); // Refresh the list
@@ -548,17 +598,17 @@
         async function bulkUpdateStatus() {
             const status = document.getElementById('bulkStatus').value;
             const admin_notes = document.getElementById('bulkNotes').value;
-            
+
             if (!status) {
                 alert('Please select a status');
                 return;
             }
-            
+
             if (selectedContacts.size === 0) {
                 alert('Please select contacts to update');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${API_BASE}/bulk/status`, {
                     method: 'PUT',
@@ -571,10 +621,10 @@
                         admin_notes: admin_notes || undefined
                     })
                 });
-                
+
                 const result = await response.json();
                 alert(result.message || 'Bulk update completed');
-                
+
                 if (response.ok) {
                     clearSelection();
                     loadContactsList(); // Refresh the list
@@ -604,7 +654,7 @@
         function updateBulkActions() {
             const bulkActions = document.getElementById('bulkActions');
             const selectedCount = document.getElementById('selectedCount');
-            
+
             if (selectedContacts.size > 0) {
                 bulkActions.style.display = 'block';
                 selectedCount.textContent = `${selectedContacts.size} contacts selected`;
@@ -619,7 +669,7 @@
                 const response = await fetch(`${API_BASE}?limit=20`);
                 const result = await response.json();
                 const listDiv = document.getElementById('contactsList');
-                
+
                 if (response.ok && result.success) {
                     listDiv.innerHTML = result.data.map(contact => `
                         <div class="contact-item">
@@ -654,4 +704,5 @@
         getContactStats();
     </script>
 </body>
+
 </html>

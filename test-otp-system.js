@@ -27,7 +27,7 @@ async function testOtpSystem() {
 
         if (registrationOtpResult.status === 'success') {
             console.log('✅ Registration OTP sent successfully!');
-            
+
             // Test 2: Verify Registration OTP (using a dummy OTP for testing)
             console.log('\n2️⃣ Testing Verify Registration OTP...');
             const verifyRegistrationResponse = await fetch(`${BASE_URL}/verify-registration-otp`, {
@@ -66,7 +66,7 @@ async function testOtpSystem() {
 
         if (loginOtpResult.status === 'success') {
             console.log('✅ Login OTP sent successfully!');
-            
+
             // Test 4: Verify Login OTP
             console.log('\n4️⃣ Testing Verify Login OTP...');
             const verifyLoginResponse = await fetch(`${BASE_URL}/verify-login-otp`, {

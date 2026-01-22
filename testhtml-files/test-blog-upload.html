@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,21 +12,27 @@
             margin: 0 auto;
             padding: 20px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input, textarea, select {
+
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         button {
             background-color: #007bff;
             color: white;
@@ -34,31 +41,37 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .image-preview {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 10px;
         }
+
         .image-preview img {
             width: 100px;
             height: 100px;
             object-fit: cover;
             border-radius: 4px;
         }
+
         .response {
             margin-top: 20px;
             padding: 15px;
             border-radius: 4px;
         }
+
         .success {
             background-color: #d4edda;
             border: 1px solid #c3e6cb;
             color: #155724;
         }
+
         .error {
             background-color: #f8d7da;
             border: 1px solid #f5c6cb;
@@ -66,30 +79,31 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Test Blog Creation with Image Upload</h1>
-    
+
     <form id="blogForm">
         <div class="form-group">
             <label for="blogTitle">Blog Title:</label>
             <input type="text" id="blogTitle" name="blogTitle" required>
         </div>
-        
+
         <div class="form-group">
             <label for="blogDescription">Blog Description:</label>
             <textarea id="blogDescription" name="blogDescription" rows="3" required></textarea>
         </div>
-        
+
         <div class="form-group">
             <label for="blogContent">Blog Content:</label>
             <textarea id="blogContent" name="blogContent" rows="5" required></textarea>
         </div>
-        
+
         <div class="form-group">
             <label for="writer">Writer:</label>
             <input type="text" id="writer" name="writer" required>
         </div>
-        
+
         <div class="form-group">
             <label for="category">Category:</label>
             <select id="category" name="category" required>
@@ -100,38 +114,38 @@
                 <option value="Lifestyle">Lifestyle</option>
             </select>
         </div>
-        
+
         <div class="form-group">
             <label for="tags">Tags (comma separated):</label>
             <input type="text" id="tags" name="tags" placeholder="tag1, tag2, tag3">
         </div>
-        
+
         <div class="form-group">
             <label for="slug">URL Slug:</label>
             <input type="text" id="slug" name="slug" required>
         </div>
-        
+
         <div class="form-group">
             <label for="images">Blog Images:</label>
             <input type="file" id="images" name="images" multiple accept="image/*">
             <div class="image-preview" id="imagePreview"></div>
         </div>
-        
+
         <button type="submit">Create Blog</button>
     </form>
-    
+
     <div id="response"></div>
 
     <script>
         // Image preview functionality
-        document.getElementById('images').addEventListener('change', function(e) {
+        document.getElementById('images').addEventListener('change', function (e) {
             const preview = document.getElementById('imagePreview');
             preview.innerHTML = '';
-            
+
             Array.from(e.target.files).forEach(file => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         const img = document.createElement('img');
                         img.src = e.target.result;
                         preview.appendChild(img);
@@ -142,12 +156,12 @@
         });
 
         // Form submission
-        document.getElementById('blogForm').addEventListener('submit', async function(e) {
+        document.getElementById('blogForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const formData = new FormData();
             const form = e.target;
-            
+
             // Add all form fields
             formData.append('blogTitle', form.blogTitle.value);
             formData.append('blogDescription', form.blogDescription.value);
@@ -156,21 +170,21 @@
             formData.append('category', form.category.value);
             formData.append('tags', form.tags.value);
             formData.append('slug', form.slug.value);
-            
+
             // Add images
             const imageFiles = form.images.files;
             Array.from(imageFiles).forEach(file => {
                 formData.append('images', file);
             });
-            
+
             try {
                 const response = await fetch('http://localhost:8000/api/blogs/', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     document.getElementById('response').innerHTML = `
                         <div class="response success">
@@ -199,4 +213,5 @@
         });
     </script>
 </body>
+
 </html>

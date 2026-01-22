@@ -4,13 +4,13 @@ const fetch = require('node-fetch');
 async function testUpdateUserStatus() {
   try {
     console.log('🧪 Testing Update User Status API...\n');
-    
+
     // You'll need to replace these with valid values
     const adminToken = 'YOUR_ADMIN_TOKEN_HERE';
     const userId = 1; // Replace with actual user ID
-    
+
     console.log(`📡 Testing status update for user ID: ${userId}`);
-    
+
     // Test 1: Deactivate user
     console.log('\n🔄 Test 1: Deactivating user...');
     const deactivateResponse = await fetch(`http://localhost:8000/api/webusers/${userId}/status`, {
@@ -25,7 +25,7 @@ async function testUpdateUserStatus() {
     });
 
     console.log(`📡 Deactivate Response Status: ${deactivateResponse.status}`);
-    
+
     if (deactivateResponse.ok) {
       const deactivateData = await deactivateResponse.json();
       console.log('✅ Deactivate Response:');
@@ -53,7 +53,7 @@ async function testUpdateUserStatus() {
     });
 
     console.log(`📡 Activate Response Status: ${activateResponse.status}`);
-    
+
     if (activateResponse.ok) {
       const activateData = await activateResponse.json();
       console.log('✅ Activate Response:');
