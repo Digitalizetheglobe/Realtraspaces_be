@@ -17,7 +17,9 @@ const generateToken = (id) => {
 // @access  Public
 exports.sendRegistrationOtp = async (req, res) => {
     try {
-        const { fullName, mobileNumber, email, location, company } = req.body;
+        const { fullName, mobileNumber, location, company } = req.body;
+        let { email } = req.body;
+        if (email) email = email.trim();
 
         // Check if user already exists
         const userExists = await Webuser.findOne({
@@ -73,7 +75,19 @@ exports.sendRegistrationOtp = async (req, res) => {
 // @access  Public
 exports.verifyRegistrationOtp = async (req, res) => {
     try {
-        const { email, otpCode, fullName, mobileNumber, location, company } = req.body;
+        const { otpCode, fullName, mobileNumber, location, company, password } = req.body;
+        let { email } = req.body;
+        if (email) email = email.trim();
+
+        console.log('Verifying OTP for:', email);
+        console.log('Received password length:', password ? password.length : 0);
+
+        if (!password) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Password is required for registration'
+            });
+        }
 
         // Verify OTP
         const otpResult = await otpService.verifyOtp(email, otpCode, 'registration');
@@ -92,7 +106,7 @@ exports.verifyRegistrationOtp = async (req, res) => {
             email,
             location,
             company,
-            password: 'otp_authenticated' // Placeholder since we're using OTP
+            password: password
         });
 
         // Generate token
@@ -161,7 +175,8 @@ exports.verifyRegistrationOtp = async (req, res) => {
 // @access  Public
 exports.sendLoginOtp = async (req, res) => {
     try {
-        const { email } = req.body;
+        let { email } = req.body;
+        if (email) email = email.trim();
 
         if (!email) {
             return res.status(400).json({
@@ -221,7 +236,9 @@ exports.sendLoginOtp = async (req, res) => {
 // @access  Public
 exports.verifyLoginOtp = async (req, res) => {
     try {
-        const { email, otpCode } = req.body;
+        const { otpCode } = req.body;
+        let { email } = req.body;
+        if (email) email = email.trim();
 
         if (!email || !otpCode) {
             return res.status(400).json({
@@ -289,7 +306,9 @@ exports.verifyLoginOtp = async (req, res) => {
 // @access  Public
 exports.loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { password } = req.body;
+        let { email } = req.body;
+        if (email) email = email.trim();
 
         if (!email || !password) {
             return res.status(400).json({
