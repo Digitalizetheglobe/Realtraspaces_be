@@ -77,7 +77,7 @@ exports.verifyRegistrationOtp = async (req, res) => {
 
         // Verify OTP
         const otpResult = await otpService.verifyOtp(email, otpCode, 'registration');
-        
+
         if (!otpResult.success) {
             return res.status(400).json({
                 status: 'error',
@@ -232,7 +232,7 @@ exports.verifyLoginOtp = async (req, res) => {
 
         // Verify OTP
         const otpResult = await otpService.verifyOtp(email, otpCode, 'login');
-        
+
         if (!otpResult.success) {
             return res.status(400).json({
                 status: 'error',
@@ -279,6 +279,72 @@ exports.verifyLoginOtp = async (req, res) => {
         res.status(500).json({
             status: 'error',
             message: 'Server error during login verification',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
+
+// @desc    Login with email and password
+// @route   POST /api/webusers/login
+// @access  Public
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Please provide email and password'
+            });
+        }
+
+        // Check if user exists
+        const user = await Webuser.scope('withPassword').findOne({
+            where: { email }
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Invalid email or password'
+            });
+        }
+
+        // Check password
+        if (!user.validPassword(password)) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Invalid email or password'
+            });
+        }
+
+        // Check if user account is active
+        if (!user.isActive) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Account has been deactivated. Please contact administrator.'
+            });
+        }
+
+        // Generate token
+        const token = generateToken(user.id);
+
+        res.json({
+            status: 'success',
+            message: 'Login successful',
+            data: {
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+                mobileNumber: user.mobileNumber,
+                token
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error during login',
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
@@ -355,7 +421,7 @@ exports.updateUserStatus = async (req, res) => {
 
         // Find user by ID
         const user = await Webuser.findByPk(id);
-        
+
         if (!user) {
             return res.status(404).json({
                 status: 'error',

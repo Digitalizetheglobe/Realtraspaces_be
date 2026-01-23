@@ -10,6 +10,7 @@ router.post('/send-registration-otp', webuserController.sendRegistrationOtp);
 router.post('/verify-registration-otp', webuserController.verifyRegistrationOtp);
 router.post('/send-login-otp', webuserController.sendLoginOtp);
 router.post('/verify-login-otp', webuserController.verifyLoginOtp);
+router.post('/login', webuserController.loginUser);
 
 // Protected routes
 router.get('/profile', protect, webuserController.getUserProfile);
