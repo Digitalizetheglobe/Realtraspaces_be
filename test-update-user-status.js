@@ -13,7 +13,7 @@ async function testUpdateUserStatus() {
 
     // Test 1: Deactivate user
     console.log('\n🔄 Test 1: Deactivating user...');
-    const deactivateResponse = await fetch(`http://localhost:8000/api/webusers/${userId}/status`, {
+    const deactivateResponse = await fetch(`https://api.realtraspaces.com/api/webusers/${userId}/status`, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${adminToken}`,
@@ -41,7 +41,7 @@ async function testUpdateUserStatus() {
 
     // Test 2: Activate user
     console.log('\n🔄 Test 2: Activating user...');
-    const activateResponse = await fetch(`http://localhost:8000/api/webusers/${userId}/status`, {
+    const activateResponse = await fetch(`https://api.realtraspaces.com/api/webusers/${userId}/status`, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${adminToken}`,

@@ -1,6 +1,6 @@
 // Using built-in fetch (Node.js 18+)
 
-const BASE_URL = 'http://localhost:8000/api/webusers';
+const BASE_URL = 'https://api.realtraspaces.com/api/webusers';
 
 async function testOtpSystem() {
     console.log('🧪 Testing OTP Authentication System...\n');

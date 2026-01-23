@@ -46,7 +46,7 @@ Creates a new developer with optional logo upload.
   "data": {
     "id": 1,
     "buildername": "Developer Name",
-    "builder_logo": "http://localhost:8000/developers/developer-1234567890.jpg",
+    "builder_logo": "https://api.realtraspaces.com/developers/developer-1234567890.jpg",
     "descriptions": "Developer description",
     "project_name": ["Project 1", "Project 2"],
     "images": [],
@@ -76,12 +76,12 @@ Upload multiple images for a specific developer.
   "message": "Images uploaded successfully",
   "data": {
     "uploadedImages": [
-      "http://localhost:8000/developers/developer-1234567890.jpg",
-      "http://localhost:8000/developers/developer-1234567891.jpg"
+      "https://api.realtraspaces.com/developers/developer-1234567890.jpg",
+      "https://api.realtraspaces.com/developers/developer-1234567891.jpg"
     ],
     "totalImages": [
-      "http://localhost:8000/developers/developer-1234567890.jpg",
-      "http://localhost:8000/developers/developer-1234567891.jpg"
+      "https://api.realtraspaces.com/developers/developer-1234567890.jpg",
+      "https://api.realtraspaces.com/developers/developer-1234567891.jpg"
     ]
   }
 }
@@ -104,12 +104,12 @@ Retrieves all developers with their images.
     {
       "id": 1,
       "buildername": "Developer Name",
-      "builder_logo": "http://localhost:8000/developers/developer-1234567890.jpg",
+      "builder_logo": "https://api.realtraspaces.com/developers/developer-1234567890.jpg",
       "descriptions": "Developer description",
       "project_name": ["Project 1", "Project 2"],
       "images": [
-        "http://localhost:8000/developers/developer-1234567891.jpg",
-        "http://localhost:8000/developers/developer-1234567892.jpg"
+        "https://api.realtraspaces.com/developers/developer-1234567891.jpg",
+        "https://api.realtraspaces.com/developers/developer-1234567892.jpg"
       ],
       "status": true,
       "created_at": "2024-01-01T00:00:00.000Z",
@@ -131,12 +131,12 @@ Retrieves a specific developer by ID.
   "data": {
     "id": 1,
     "buildername": "Developer Name",
-    "builder_logo": "http://localhost:8000/developers/developer-1234567890.jpg",
+    "builder_logo": "https://api.realtraspaces.com/developers/developer-1234567890.jpg",
     "descriptions": "Developer description",
     "project_name": ["Project 1", "Project 2"],
     "images": [
-      "http://localhost:8000/developers/developer-1234567891.jpg",
-      "http://localhost:8000/developers/developer-1234567892.jpg"
+      "https://api.realtraspaces.com/developers/developer-1234567891.jpg",
+      "https://api.realtraspaces.com/developers/developer-1234567892.jpg"
     ],
     "status": true,
     "created_at": "2024-01-01T00:00:00.000Z",
@@ -170,7 +170,7 @@ Updates a developer with optional logo upload.
   "data": {
     "id": 1,
     "buildername": "Updated Developer Name",
-    "builder_logo": "http://localhost:8000/developers/developer-1234567890.jpg",
+    "builder_logo": "https://api.realtraspaces.com/developers/developer-1234567890.jpg",
     "descriptions": "Updated description",
     "project_name": ["Updated Project 1", "Updated Project 2"],
     "images": ["http://example.com/image1.jpg", "http://example.com/image2.jpg"],
@@ -193,7 +193,7 @@ Deletes a specific image from a developer by its index in the images array.
   "message": "Image deleted successfully",
   "data": {
     "remainingImages": [
-      "http://localhost:8000/developers/developer-1234567892.jpg"
+      "https://api.realtraspaces.com/developers/developer-1234567892.jpg"
     ]
   }
 }

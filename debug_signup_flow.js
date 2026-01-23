@@ -14,7 +14,7 @@ async function run() {
 
         // 1. Send Registration OTP
         console.log("1. Sending OTP...");
-        const sendOtpResponse = await fetch('http://localhost:8000/api/webusers/send-registration-otp', {
+        const sendOtpResponse = await fetch('https://api.realtraspaces.com/api/webusers/send-registration-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -50,7 +50,7 @@ async function run() {
 
         // 3. Verify OTP & Register
         console.log("3. Verifying OTP and Registering...");
-        const verifyResponse = await fetch('http://localhost:8000/api/webusers/verify-registration-otp', {
+        const verifyResponse = await fetch('https://api.realtraspaces.com/api/webusers/verify-registration-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -80,7 +80,7 @@ async function run() {
 
         // 5. Try Login API
         console.log("5. Attempting Login API...");
-        const loginResponse = await fetch('http://localhost:8000/api/webusers/login', {
+        const loginResponse = await fetch('https://api.realtraspaces.com/api/webusers/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

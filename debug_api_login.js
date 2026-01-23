@@ -21,7 +21,7 @@ async function run() {
         console.log("User created in DB. Attempting login via API...");
 
         // 2. Login via API
-        const response = await fetch('http://localhost:8000/api/webusers/login', {
+        const response = await fetch('https://api.realtraspaces.com/api/webusers/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
