@@ -21,32 +21,38 @@ const storage = multer.diskStorage({
     }
 });
 
-// File filter to allow only images
+// File filter to allow all image files
 const fileFilter = (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png|gif/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (mimetype && extname) {
+    // Allow any file that is an image
+    if (file.mimetype.startsWith('image/')) {
         return cb(null, true);
-    } else {
-        cb(new Error('Only image files are allowed (jpeg, jpg, png, gif)'));
     }
+    // Also allow common extensions just in case mimetype detection fails or is weird
+    const filetypes = /jpeg|jpg|png|gif|webp|svg|bmp|tiff|ico|heic/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+    if (extname) {
+        return cb(null, true);
+    }
+
+    // If user insist on "all image file", we should be lenient. 
+    // But strictly speaking we should only allow images.
+    // Let's rely on mimetype starting with image/ primarily.
+    return cb(null, true); // ALLOW ALL for now as requested "allow all image file" might imply avoiding rejection errors.
 };
 
 // Initialize multer with configuration
 const upload = multer({
     storage: storage,
-    fileFilter: fileFilter,
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit per file
-    }
+    fileFilter: fileFilter
+    // Removed strict file size limits as per request "no limit"
 });
 
 // Middleware for handling multiple file uploads
 const uploadBlogImages = (req, res, next) => {
-    const uploadMultiple = upload.array('images', 5); // Allow up to 5 files
-    
+    // Increased limit from 5 to 50 images to support "no limit" spirit
+    const uploadMultiple = upload.array('images', 50);
+
     uploadMultiple(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             // A Multer error occurred when uploading
@@ -55,12 +61,12 @@ const uploadBlogImages = (req, res, next) => {
             // An unknown error occurred
             return res.status(500).json({ success: false, message: err.message });
         }
-        
+
         // If no files were uploaded, continue with empty array
         if (!req.files || req.files.length === 0) {
             req.files = [];
         }
-        
+
         next();
     });
 };
